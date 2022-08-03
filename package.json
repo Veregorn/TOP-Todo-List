@@ -1,0 +1,19 @@
+{
+  "name": "top-todo-list",
+  "version": "1.0.0",
+  "description": "A task manager App using Webpack, npm, Factory Functions and MVC architecture",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Veregorn/TOP-Todo-List.git"
+  },
+  "author": "Veregorn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Veregorn/TOP-Todo-List/issues"
+  },
+  "homepage": "https://github.com/Veregorn/TOP-Todo-List#readme"
+}
