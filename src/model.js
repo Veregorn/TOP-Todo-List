@@ -118,6 +118,17 @@ export const Project = (id,title,description,dueDate) => {
         }
     };
 
+    const getTodoById = (id) => {
+        for (let i = 0; i < _todos.length; i++) {
+            const element = _todos[i];
+            if (element.getId() === id) {
+                return element;
+            }
+        }
+    };
+
+    const getNumberOfTodos = () => _todos.length;
+
     return {
         getId,
         getTitle,
@@ -131,6 +142,8 @@ export const Project = (id,title,description,dueDate) => {
         complete,
         unComplete,
         addTodo,
-        deleteTodo
+        deleteTodo,
+        getTodoById,
+        getNumberOfTodos
     };
 };
