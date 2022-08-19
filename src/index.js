@@ -1,5 +1,6 @@
 import './style.css';
-import {Project, Todo} from './model.js';
+import {Project, Todo, planner} from './model.js';
+import {view} from './view.js';
 
 const todo1 = Todo(1,"todo1","I'm todo number 1","04-08-2022","high");
 // console.log(todo1.getTitle());

@@ -48,3 +48,42 @@ table {
 }
 
 /* MY OWN STYLES FROM HERE */
+
+body {
+    height: 100vh;
+    display: grid;
+    grid-template: 1fr 7fr / 1fr 3.5fr;
+    grid-template-areas:
+        "sidebar header"
+        "sidebar main"
+}
+
+#sidebar {
+    /*font-family: Roboto-Medium;*/
+    grid-area: sidebar;
+    display: grid;
+    align-content: start;
+    gap: 50px;
+    padding-top: 20px;
+    padding-left: 10px;
+    background-color: #0087CE;
+    color: white;
+}
+
+#header {
+    grid-area: header;
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    align-content: space-between;
+    padding: 20px 40px 0px 40px;
+    box-shadow: 2px 2px 5px #656565c2;
+}
+
+#main {
+    padding: 30px 20px;
+    background-color: #DDE4EE;
+    grid-area: main;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 3fr 1fr;
+}
