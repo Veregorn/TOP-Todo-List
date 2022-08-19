@@ -1,5 +1,7 @@
+import Logo from './assets/icons/logo-icon.png';
+
 // A module (only one instance) for a View that control DOM manipulation
-let view = (function() {
+export let view = (function() {
     'use strict';
 
     // Create an element with an optional CSS class
@@ -42,6 +44,20 @@ let view = (function() {
         // Create a <div id="main"></div> element and append it to <body></body>
         const main = createElementWithId("div","main");
         document.body.appendChild(main);
+
+        // SIDEBAR
+        const logo = createElementWithId("div","logo");
+        sidebar.appendChild(logo);
+
+        const icon = new Image();
+        icon.src = Logo;
+        icon.setAttribute('class','icon');
+        icon.setAttribute('alt','icon');
+        logo.appendChild(icon);
+
+        const h1 = createElementWithClass("h1");
+        h1.textContent = "Todo List";
+        logo.appendChild(h1);
     }
 
     return {

@@ -149,10 +149,10 @@ export const Project = (id,title,description,dueDate) => {
 };
 
 // A module (only one instance) for a Planner that contains Projects for a user
-let planner = (function() {
+export let todosPlanner = (function() {
     'use strict';
 
-    let _owner = "Your Planner"; // The planner has an owner (the user)
+    let _owner = "Veregorn's ToDos Planner"; // The planner has an owner (the user)
     let _projects = []; // The planner contains an array of Projects
 
     // We can change owner's name

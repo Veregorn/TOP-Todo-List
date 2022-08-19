@@ -1,5 +1,5 @@
-import './style.css';
-import {Project, Todo, planner} from './model.js';
+import './styles/global.css';
+import {Project, Todo, todosPlanner} from './model.js';
 import {view} from './view.js';
 
 const todo1 = Todo(1,"todo1","I'm todo number 1","04-08-2022","high");
@@ -14,3 +14,5 @@ console.log(retrievedTodo.getDescription());
 console.log("Default project has " + defProject.getNumberOfTodos() + " TODOs");
 defProject.deleteTodo(1);
 console.log("Default project has " + defProject.getNumberOfTodos() + " TODOs");
+
+view.loadMainUI();

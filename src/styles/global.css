@@ -49,6 +49,11 @@ table {
 
 /* MY OWN STYLES FROM HERE */
 
+@font-face {
+    font-family: 'Roboto-Medium';
+    src: url('../assets/fonts/Roboto-Medium.ttf');
+}
+
 body {
     height: 100vh;
     display: grid;
@@ -59,7 +64,7 @@ body {
 }
 
 #sidebar {
-    /*font-family: Roboto-Medium;*/
+    font-family: 'Roboto-Medium';
     grid-area: sidebar;
     display: grid;
     align-content: start;
@@ -68,6 +73,21 @@ body {
     padding-left: 10px;
     background-color: #0087CE;
     color: white;
+}
+
+#logo {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.icon {
+    justify-self: center;
+}
+
+h1 {
+    font-size: 30px;
 }
 
 #header {
