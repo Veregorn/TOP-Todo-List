@@ -147,3 +147,40 @@ export const Project = (id,title,description,dueDate) => {
         getNumberOfTodos
     };
 };
+
+// A module (only one instance) for a Planner that contains Projects for a user
+let planner = (function() {
+    'use strict';
+
+    let _owner = "Your Planner"; // The planner has an owner (the user)
+    let _projects = []; // The planner contains an array of Projects
+
+    // We can change owner's name
+    function setOwner(name) {
+        _owner = name;
+    }
+
+    function getProjects() {
+        return _projects;
+    }
+
+    function addProject(project) {
+        _projects.push(project);
+    }
+
+    function deleteProject(id) {
+        for (let i = 0; i < _projects.length; i++) {
+            const element = _projects[i];
+            if (element.getId() === id) {
+                _projects.splice(i,1);
+            }
+        }
+    }
+
+    return {
+        setOwner,
+        getProjects,
+        addProject,
+        deleteProject
+    }
+})();
