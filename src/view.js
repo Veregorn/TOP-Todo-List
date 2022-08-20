@@ -25,8 +25,8 @@ export let view = (function() {
     }
 
     // Retrieve an element from the DOM
-    function getElement(selector) {
-        const element = document.querySelector(selector);
+    function getElement(id) {
+        const element = document.getElementById(id);
 
         return element;
     }
@@ -46,6 +46,8 @@ export let view = (function() {
         document.body.appendChild(main);
 
         // SIDEBAR
+
+        // Logo
         const logo = createElementWithId("div","logo");
         sidebar.appendChild(logo);
 
@@ -58,12 +60,42 @@ export let view = (function() {
         const h1 = createElementWithClass("h1");
         h1.textContent = "Todo List";
         logo.appendChild(h1);
+
+        // Projects
+        const projects = createElementWithId('div','projects');
+        sidebar.appendChild(projects);
+
+        const h2 = createElementWithClass('h2');
+        h2.textContent = "Projects";
+        projects.appendChild(h2);
+
+        const menu = createElementWithId('div','menu');
+        projects.appendChild(menu);
+
+        const ul = createElementWithId('ul','projects-list');
+        menu.appendChild(ul);
+    }
+
+    function displayProjects(projects) {
+        // Retrieve <ul id="projects-list"></ul> element from the DOM
+        const projectsList = getElement('projects-list');
+
+        // Delete all nodes
+        while (projectsList.firstChild) {
+            projectsList.removeChild(projectsList.firstChild);
+        }
+
+        // Esto no tiene sentido para mi porque yo siempre voy a tener un proyecto
+        // default, asi que me interesa más crear una función que me diga el numero
+        // de hijos que tiene un elemento. De forma que luego desde aquí, voy borrando
+        // desde el final y cuando haya uno me paro
     }
 
     return {
         createElementWithClass,
         createElementWithId,
         getElement,
-        loadMainUI
+        loadMainUI,
+        displayProjects
     }
 })();

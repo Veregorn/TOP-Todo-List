@@ -75,7 +75,7 @@ body {
     color: white;
 }
 
-#logo {
+#logo, #menu ul li {
     display: grid;
     grid-template-columns: 1fr 4fr;
     align-items: center;
@@ -88,6 +88,19 @@ body {
 
 h1 {
     font-size: 30px;
+}
+
+#projects {
+    display: grid;
+    gap: 50px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+#projects p {
+    font-size: 22px;
 }
 
 #header {
