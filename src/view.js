@@ -82,13 +82,32 @@ export let view = (function() {
 
         // Delete all nodes
         while (projectsList.firstChild) {
-            projectsList.removeChild(projectsList.firstChild);
+            projectsList.removeChild(projectsList.lastChild);
         }
+        
+        // Create nodes for each project in the array
+        for (let i = 0; i < projects.length - 1; i++) {
+            // Create the <li></li> with the id of the project
+            const li = createElementWithId('li',projects[i].getId());
+            
+            // Inside each <li></li> there is a <p></p>
+            const p = createElementWithClass('p','project-name');
+            p.textContent = projects[i].getTitle();
+            li.appendChild(p);
 
-        // Esto no tiene sentido para mi porque yo siempre voy a tener un proyecto
-        // default, asi que me interesa más crear una función que me diga el numero
-        // de hijos que tiene un elemento. De forma que luego desde aquí, voy borrando
-        // desde el final y cuando haya uno me paro
+            // Projects will also have a delete button (except 'default' one - the first)
+            if (i > 0) {
+                const deleteButton = createElementWithClass('button','delete');
+                deleteButton.textContent = \u1F5D1;
+                li.appendChild(deleteButton);
+            }
+
+            // Append the new node to the projects list
+            projectsList.appendChild(li);
+
+            // Aquí lo que falla es que los proyectos no son clickables para desplegarlos
+            // en la pantalla principal
+        }
     }
 
     return {
