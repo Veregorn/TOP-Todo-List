@@ -75,11 +75,11 @@ body {
     color: white;
 }
 
-#logo, #menu ul li {
+#logo {
     display: grid;
     grid-template-columns: 1fr 4fr;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .icon {
@@ -99,8 +99,50 @@ h2 {
     font-size: 24px;
 }
 
-#projects p {
-    font-size: 22px;
+#projects ul li {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.project-name {
+    font-size: 15px;
+    line-height: 20px;
+    text-decoration: none;
+    color: white;
+}
+
+.project-name:hover {
+    color: gold;
+}
+
+#projects button {
+    background: white;
+    border: none;
+    border-radius: 3px;
+}
+
+#projects button:hover {
+    background-color:crimson;
+}
+
+#new-project {
+    text-align: center;
+}
+
+#new-project button {
+    padding: 10px 20px;
+    background-color: #F59F27;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#new-project button:hover {
+    background-color: #f59f277b;
 }
 
 #header {

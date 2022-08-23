@@ -74,9 +74,33 @@ export let view = (function() {
 
         const ul = createElementWithId('ul','projects-list');
         menu.appendChild(ul);
+
+        // New Project
+        const newProjDiv = createElementWithId('div','new-project');
+        sidebar.appendChild(newProjDiv);
+
+        const button = createElementWithClass('button');
+        button.textContent = "New Project";
+        newProjDiv.appendChild(button);
+
+        // HEADER
+
+        // Sub Header 1
+        const subHeader1 = createElementWithId('div','subheader-1');
+        header.appendChild(subHeader1);
+
+        const search = createElementWithId('div','search');
+        subHeader1.appendChild(search);
+
+        const user = createElementWithId('div','user');
+        subHeader1.appendChild(user);
+
+        // Sub Header 2
+        const subHeader2 = createElementWithId('div','subheader-2');
+        header.appendChild(subHeader2);
     }
 
-    function displayProjects(projects) {
+    function displayProjectsMenu(projects) {
         // Retrieve <ul id="projects-list"></ul> element from the DOM
         const projectsList = getElement('projects-list');
 
@@ -86,28 +110,30 @@ export let view = (function() {
         }
         
         // Create nodes for each project in the array
-        for (let i = 0; i < projects.length - 1; i++) {
+        for (let i = 0; i < projects.length; i++) {
             // Create the <li></li> with the id of the project
             const li = createElementWithId('li',projects[i].getId());
             
-            // Inside each <li></li> there is a <p></p>
-            const p = createElementWithClass('p','project-name');
-            p.textContent = projects[i].getTitle();
-            li.appendChild(p);
+            // Inside each <li></li> there is a <a></a>
+            const a = createElementWithClass('a','project-name');
+            a.setAttribute('href','');
+            a.textContent = projects[i].getTitle();
+            li.appendChild(a);
 
             // Projects will also have a delete button (except 'default' one - the first)
             if (i > 0) {
                 const deleteButton = createElementWithClass('button','delete');
-                deleteButton.textContent = \u1F5D1;
+                deleteButton.textContent = 'Delete';
                 li.appendChild(deleteButton);
             }
 
             // Append the new node to the projects list
             projectsList.appendChild(li);
-
-            // Aquí lo que falla es que los proyectos no son clickables para desplegarlos
-            // en la pantalla principal
         }
+    }
+
+    function displayProjectInfo(project) {
+        
     }
 
     return {
@@ -115,6 +141,7 @@ export let view = (function() {
         createElementWithId,
         getElement,
         loadMainUI,
-        displayProjects
+        displayProjectsMenu,
+        displayProjectInfo
     }
 })();
