@@ -1,4 +1,5 @@
 import Logo from './assets/icons/logo-icon.png';
+import Magnify from './assets/icons/magnify.png';
 
 // A module (only one instance) for a View that control DOM manipulation
 export let view = (function() {
@@ -91,6 +92,17 @@ export let view = (function() {
 
         const search = createElementWithId('div','search');
         subHeader1.appendChild(search);
+
+        const magni = new Image();
+        magni.src = Magnify;
+        magni.setAttribute('alt','search-icon');
+        search.appendChild(magni);
+
+        const searchInput = createElementWithId('input','search-input');
+        searchInput.setAttribute('type','text');
+        searchInput.setAttribute('name','search-input');
+        searchInput.setAttribute('placeholder','Find TODOs in this project');
+        search.appendChild(searchInput);
 
         const user = createElementWithId('div','user');
         subHeader1.appendChild(user);

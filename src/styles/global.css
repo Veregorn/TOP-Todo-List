@@ -54,6 +54,11 @@ table {
     src: url('../assets/fonts/Roboto-Medium.ttf');
 }
 
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('../assets/fonts/Roboto-Bold.ttf');
+}
+
 body {
     height: 100vh;
     display: grid;
@@ -152,6 +157,52 @@ h2 {
     align-content: space-between;
     padding: 20px 40px 0px 40px;
     box-shadow: 2px 2px 5px #656565c2;
+}
+
+#subheader-1 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    justify-content: space-between;
+}
+
+#search {
+    display: grid;
+    grid-template-columns: 0.5fr 8fr;
+    align-items: center;
+}
+
+input {
+    background-color: #DDE4EE;
+    border: none;
+    width: 50em;
+    height: 2.5em;
+    border-radius: 2em;
+    padding-left: 10px;
+}
+
+#user {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    justify-items: end;
+    align-items: center;
+    gap: 30px;
+}
+
+#user p {
+    font-family: 'Roboto-Bold';
+    font-size: 18px;
+}
+
+.avatar-small {
+    height: 50px;
+    width: 50px;
+}
+
+#subheader-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: space-between;
+    align-items: center;
 }
 
 #main {
