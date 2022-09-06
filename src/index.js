@@ -1,6 +1,7 @@
 import './styles/global.css';
-import {Project, Todo, todosPlanner} from './model.js';
+import {Project, Todo, User} from './model.js';
 import {view} from './view.js';
+import Avatar from './assets/icons/monkey.svg';
 
 const todo1 = Todo(1,"todo1","I'm todo number 1","04-08-2022","high");
 const todo2 = Todo(2,"todo2","I'm todo number 2","01-09-2022","low");
@@ -19,6 +20,10 @@ const anotherProject = Project(2,"Another Project","This is the project number 2
 anotherProject.addTodo(todo3);
 const project3 = Project(3,"Develop a web3 App","This is the project number 3","20-09-2022",false,false,[]);
 const project4 = Project(4,"Learn how to cook a Spanish Omelette","This is the project number 4","20-09-2022",false,false,[]);
+
+// Let's create a new user
+const user = User("Veregorn",Avatar);
+console.log(user.getName());
 
 view.loadMainUI();
 const projects = [defProject,anotherProject,project3,project4];

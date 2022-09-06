@@ -148,16 +148,30 @@ export const Project = (id,title,description,dueDate) => {
     };
 };
 
-// A module (only one instance) for a Planner that contains Projects for a user
-export let todosPlanner = (function() {
-    'use strict';
+// Factory for users
+export const User = (name,path) => {
+    // PROPERTIES
+    let _name = name; // User name
+    let _avatar = new Image(); // User avatar
+    _avatar.src = path;
+    let _projects = []; // The user has an array of Projects
 
-    let _owner = "Veregorn's ToDos Planner"; // The planner has an owner (the user)
-    let _projects = []; // The planner contains an array of Projects
+    // We can change user's name
+    function setName(name) {
+        _name = name;
+    }
 
-    // We can change owner's name
-    function setOwner(name) {
-        _owner = name;
+    function getName() {
+        return _name;
+    }
+
+    // We can change user avatar
+    function setAvatar(path) {
+        _avatar.src = path;
+    }
+
+    function getAvatar() {
+        return _avatar;
     }
 
     function getProjects() {
@@ -178,9 +192,12 @@ export let todosPlanner = (function() {
     }
 
     return {
-        setOwner,
+        setName,
+        getName,
+        setAvatar,
+        getAvatar,
         getProjects,
         addProject,
         deleteProject
     }
-})();
+};
