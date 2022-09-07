@@ -24,8 +24,26 @@ const project4 = Project(4,"Learn how to cook a Spanish Omelette","This is the p
 // Let's create a new user
 const user = User("Veregorn",Avatar);
 console.log(user.getName());
+user.addProject(defProject);
+user.addProject(anotherProject);
+user.addProject(project3);
+user.addProject(project4);
 
 view.loadMainUI();
-const projects = [defProject,anotherProject,project3,project4];
-console.log(projects.length);
-view.displayProjectsMenu(projects);
+
+// Displaying user's projects in left menu
+// First create an array with projects ids
+let ids = [];
+for (let i = 0; i < user.getProjects().length; i++) {
+    const element = user.getProjects()[i];
+    ids.push(element.getId());
+}
+// Then create another array with projects titles
+let titles = [];
+for (let i = 0; i < user.getProjects().length; i++) {
+    const element = user.getProjects()[i];
+    titles.push(element.getTitle());
+}
+
+view.displayProjectsMenu(ids,titles);
+view.displayUserInfo(user.getAvatar(),user.getName());

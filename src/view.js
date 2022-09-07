@@ -112,7 +112,7 @@ export let view = (function() {
         header.appendChild(subHeader2);
     }
 
-    function displayProjectsMenu(projects) {
+    function displayProjectsMenu(ids,titles) {
         // Retrieve <ul id="projects-list"></ul> element from the DOM
         const projectsList = getElement('projects-list');
 
@@ -122,14 +122,14 @@ export let view = (function() {
         }
         
         // Create nodes for each project in the array
-        for (let i = 0; i < projects.length; i++) {
+        for (let i = 0; i < ids.length; i++) {
             // Create the <li></li> with the id of the project
-            const li = createElementWithId('li',projects[i].getId());
+            const li = createElementWithId('li',ids[i]);
             
             // Inside each <li></li> there is a <a></a>
             const a = createElementWithClass('a','project-name');
             a.setAttribute('href','');
-            a.textContent = projects[i].getTitle();
+            a.textContent = titles[i];
             li.appendChild(a);
 
             // Projects will also have a delete button (except 'default' one - the first)
@@ -144,6 +144,21 @@ export let view = (function() {
         }
     }
 
+    function displayUserInfo(img,userName) {
+        const userDiv = getElement('user');
+
+        // Display user avatar
+        const avatar = img;
+        avatar.setAttribute('alt','avatar');
+        avatar.classList.add('avatar-small');
+        userDiv.appendChild(avatar);
+
+        // Display user name
+        const name = createElementWithClass('p');
+        name.textContent = userName;
+        userDiv.appendChild(name);
+    }
+
     function displayProjectInfo(project) {
         
     }
@@ -154,6 +169,7 @@ export let view = (function() {
         getElement,
         loadMainUI,
         displayProjectsMenu,
+        displayUserInfo,
         displayProjectInfo
     }
 })();
