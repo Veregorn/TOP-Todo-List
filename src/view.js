@@ -159,8 +159,34 @@ export let view = (function() {
         userDiv.appendChild(name);
     }
 
-    function displayProjectInfo(project) {
+    function displayProjectInfo(title,desc,date) {
+        // This info goes inside 'subheader-2' <div></div>
+        const subHeader2 = getElement('subheader-2');
+
+        // Another <div></div> for all this section is created
+        const projectInfo = createElementWithId('div','project-info');
+        // Left side has another <div></div> with title and desc inside it
+        const piLeft = createElementWithId('div','piLeft');
         
+        const projectTitle = createElementWithClass('p','project-title');
+        projectTitle.textContent = title;
+        piLeft.appendChild(projectTitle);
+
+        const projectDesc = createElementWithClass('p','project-desc');
+        projectDesc.textContent = desc;
+        piLeft.appendChild(projectDesc);
+
+        // Right side has another <div></div> with due date in it
+        const piRight = createElementWithId('div','piRight');
+
+        const projectDueDate = createElementWithClass('p','project-date');
+        projectDueDate.textContent = date;
+        piRight.appendChild(projectDueDate);
+
+        projectInfo.appendChild(piLeft);
+        projectInfo.appendChild(piRight);
+
+        subHeader2.appendChild(projectInfo);
     }
 
     return {

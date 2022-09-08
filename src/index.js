@@ -47,3 +47,4 @@ for (let i = 0; i < user.getProjects().length; i++) {
 
 view.displayProjectsMenu(ids,titles);
 view.displayUserInfo(user.getAvatar(),user.getName());
+view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());

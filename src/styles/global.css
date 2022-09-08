@@ -59,6 +59,11 @@ table {
     src: url('../assets/fonts/Roboto-Bold.ttf');
 }
 
+@font-face {
+    font-family: 'Roboto-Light';
+    src: url('../assets/fonts/Roboto-Light.ttf');
+}
+
 body {
     height: 100vh;
     display: grid;
@@ -203,6 +208,31 @@ input {
     grid-template-columns: 1fr 1fr;
     justify-items: space-between;
     align-items: center;
+}
+
+#project-info {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    justify-content: start;
+    /*align-items: center;*/
+}
+
+.project-title {
+    font-family: 'Roboto-Bold';
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.project-desc {
+    font-family: 'Roboto-Light';
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.project-date {
+    font-family: 'Roboto-Medium';
+    font-size: 14px;
+    margin-top: 8px;
 }
 
 #main {
