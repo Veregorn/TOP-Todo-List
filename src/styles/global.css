@@ -235,6 +235,26 @@ input {
     margin-top: 8px;
 }
 
+#control-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: end;
+}
+
+#control-buttons button {
+    background-color: #0087CE;
+    color: white;
+    font-family: 'Roboto-Bold';
+    font-size: 12px;
+    height: 3em;
+    width: 9em;
+    border-radius: 2.5em;
+}
+
+#control-buttons button:hover {
+    color: gold;
+}
+
 #main {
     padding: 30px 20px;
     background-color: #DDE4EE;

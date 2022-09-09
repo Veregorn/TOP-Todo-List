@@ -110,6 +110,34 @@ export let view = (function() {
         // Sub Header 2
         const subHeader2 = createElementWithId('div','subheader-2');
         header.appendChild(subHeader2);
+
+        // Another <div></div> for left side of this section is created
+        const projectInfo = createElementWithId('div','project-info');
+        // Left side has another <div></div> for title and desc inside it
+        const piLeft = createElementWithId('div','piLeft');
+        // Right side has another <div></div> for due date in it
+        const piRight = createElementWithId('div','piRight');
+
+        projectInfo.appendChild(piLeft);
+        projectInfo.appendChild(piRight);
+
+        subHeader2.appendChild(projectInfo);
+
+        // Then we put another <div></div> on right side for buttons
+        const buttons = createElementWithId('div','control-buttons');
+
+        const newTodo = createElementWithClass('button');
+        newTodo.textContent = 'New TODO';
+        const completeAll = createElementWithClass('button');
+        completeAll.textContent = 'Complete ALL';
+        const deleteAll = createElementWithClass('button');
+        deleteAll.textContent = 'Delete All';
+
+        buttons.appendChild(newTodo);
+        buttons.appendChild(completeAll);
+        buttons.appendChild(deleteAll);
+
+        subHeader2.appendChild(buttons);
     }
 
     function displayProjectsMenu(ids,titles) {
@@ -160,13 +188,9 @@ export let view = (function() {
     }
 
     function displayProjectInfo(title,desc,date) {
-        // This info goes inside 'subheader-2' <div></div>
-        const subHeader2 = getElement('subheader-2');
-
-        // Another <div></div> for all this section is created
-        const projectInfo = createElementWithId('div','project-info');
-        // Left side has another <div></div> with title and desc inside it
-        const piLeft = createElementWithId('div','piLeft');
+        // This info goes inside <div></div>s we need to retrieve
+        const piLeft = getElement('piLeft');
+        const piRight = getElement('piRight');
         
         const projectTitle = createElementWithClass('p','project-title');
         projectTitle.textContent = title;
@@ -176,17 +200,9 @@ export let view = (function() {
         projectDesc.textContent = desc;
         piLeft.appendChild(projectDesc);
 
-        // Right side has another <div></div> with due date in it
-        const piRight = createElementWithId('div','piRight');
-
         const projectDueDate = createElementWithClass('p','project-date');
         projectDueDate.textContent = date;
         piRight.appendChild(projectDueDate);
-
-        projectInfo.appendChild(piLeft);
-        projectInfo.appendChild(piRight);
-
-        subHeader2.appendChild(projectInfo);
     }
 
     return {
