@@ -138,6 +138,33 @@ export let view = (function() {
         buttons.appendChild(deleteAll);
 
         subHeader2.appendChild(buttons);
+
+        // MAIN
+
+        // Header of TODOs list
+        const emptySpan1 = createElementWithClass('span');
+        main.appendChild(emptySpan1);
+
+        const titleSpan = createElementWithClass('span');
+        const titleStrong = createElementWithClass('strong');
+        titleStrong.textContent = 'Title';
+        titleSpan.appendChild(titleStrong);
+        main.appendChild(titleSpan);
+
+        const dateSpan = createElementWithClass('span');
+        const dateStrong = createElementWithClass('strong');
+        dateStrong.textContent = 'Due Date';
+        dateSpan.appendChild(dateStrong);
+        main.appendChild(dateSpan);
+
+        const prioritySpan = createElementWithClass('span');
+        const priorityStrong = createElementWithClass('strong');
+        priorityStrong.textContent = 'Priority';
+        prioritySpan.appendChild(priorityStrong);
+        main.appendChild(prioritySpan);
+
+        const emptySpan2 = createElementWithClass('span');
+        main.appendChild(emptySpan2);
     }
 
     function displayProjectsMenu(ids,titles) {
@@ -205,6 +232,10 @@ export let view = (function() {
         piRight.appendChild(projectDueDate);
     }
 
+    function displayTodoInList(name,date,color) {
+        
+    }
+
     return {
         createElementWithClass,
         createElementWithId,
@@ -212,6 +243,7 @@ export let view = (function() {
         loadMainUI,
         displayProjectsMenu,
         displayUserInfo,
-        displayProjectInfo
+        displayProjectInfo,
+        displayTodoInList
     }
 })();
