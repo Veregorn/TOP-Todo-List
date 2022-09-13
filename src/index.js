@@ -48,3 +48,9 @@ for (let i = 0; i < user.getProjects().length; i++) {
 view.displayProjectsMenu(ids,titles);
 view.displayUserInfo(user.getAvatar(),user.getName());
 view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
+
+// Displaying TODOs in a project
+for (let i = 0; i < defProject.getNumberOfTodos(); i++) {
+     const todo = defProject.getTodoByOrder(i);
+     view.displayTodoInList(todo.getTitle(),todo.getDueDate(),todo.isCompleted(),todo.getPriority());
+}

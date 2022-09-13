@@ -176,7 +176,7 @@ h2 {
     align-items: center;
 }
 
-input {
+#search-input {
     background-color: #DDE4EE;
     border: none;
     width: 50em;
@@ -260,10 +260,26 @@ input {
     background-color: #DDE4EE;
     grid-area: main;
     display: grid;
-    gap: 20px;
-    grid-template-columns: 1fr 7fr 3fr 2fr 2fr;
+    row-gap: 20px;
+}
+
+#main ul {
+    display: grid;
+}
+
+#main ul li {
+    display: grid;
+    grid-template-columns: 0.2fr 7fr 3fr 2fr 1fr;
 }
 
 #main strong {
     font-family: 'Roboto-Bold';
+}
+
+.delete-todo {
+    padding: 10px;
+    height: 46px;
+    background: white;
+    border: none;
+    border-radius: 3px;
 }

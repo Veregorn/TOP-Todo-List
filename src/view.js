@@ -142,29 +142,24 @@ export let view = (function() {
         // MAIN
 
         // Header of TODOs list
-        const emptySpan1 = createElementWithClass('span');
-        main.appendChild(emptySpan1);
+        const ulTodos = createElementWithId('ul','ul-todos');
+        main.appendChild(ulTodos);
 
-        const titleSpan = createElementWithClass('span');
-        const titleStrong = createElementWithClass('strong');
-        titleStrong.textContent = 'Title';
-        titleSpan.appendChild(titleStrong);
-        main.appendChild(titleSpan);
+        const liHeader = createElementWithClass('li','li-header');
+        
+        const titleHeader = createElementWithClass('p');
+        titleHeader.textContent = 'Title';
+        liHeader.appendChild(titleHeader);
+        
+        const dateHeader = createElementWithClass('p');
+        dateHeader.textContent = 'Due Date';
+        liHeader.appendChild(dateHeader);
 
-        const dateSpan = createElementWithClass('span');
-        const dateStrong = createElementWithClass('strong');
-        dateStrong.textContent = 'Due Date';
-        dateSpan.appendChild(dateStrong);
-        main.appendChild(dateSpan);
-
-        const prioritySpan = createElementWithClass('span');
-        const priorityStrong = createElementWithClass('strong');
-        priorityStrong.textContent = 'Priority';
-        prioritySpan.appendChild(priorityStrong);
-        main.appendChild(prioritySpan);
-
-        const emptySpan2 = createElementWithClass('span');
-        main.appendChild(emptySpan2);
+        const priorityHeader = createElementWithClass('p');
+        priorityHeader.textContent = 'Priority';
+        liHeader.appendChild(priorityHeader);
+        
+        ulTodos.appendChild(liHeader);
     }
 
     function displayProjectsMenu(ids,titles) {
@@ -232,8 +227,33 @@ export let view = (function() {
         piRight.appendChild(projectDueDate);
     }
 
-    function displayTodoInList(name,date,color) {
+    function displayTodoInList(name,date,completed,priority) {
+        const ul = getElement('ul-todos');
+
+        const li = createElementWithClass('li');
         
+        const checkbox = createElementWithClass('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = completed;
+        li.appendChild(checkbox);
+        
+        const titleP = createElementWithClass('p');
+        titleP.textContent = name;
+        li.appendChild(titleP);
+
+        const dateP = createElementWithClass('p');
+        dateP.textContent = date;
+        li.appendChild(dateP);
+
+        const priorityP = createElementWithClass('p');
+        priorityP.textContent = priority;
+        li.appendChild(priorityP);
+
+        const deleteButton = createElementWithClass('button','delete-todo');
+        deleteButton.textContent = 'Delete';
+        li.appendChild(deleteButton);
+        
+        ul.appendChild(li);
     }
 
     return {

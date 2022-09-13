@@ -129,6 +129,10 @@ export const Project = (id,title,description,dueDate) => {
 
     const getNumberOfTodos = () => _todos.length;
 
+    const getTodoByOrder = (i) => {
+        return _todos[i];
+    };
+
     return {
         getId,
         getTitle,
@@ -144,7 +148,8 @@ export const Project = (id,title,description,dueDate) => {
         addTodo,
         deleteTodo,
         getTodoById,
-        getNumberOfTodos
+        getNumberOfTodos,
+        getTodoByOrder
     };
 };
 
