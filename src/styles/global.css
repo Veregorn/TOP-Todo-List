@@ -265,21 +265,36 @@ h2 {
 
 #main ul {
     display: grid;
+    align-content: start;
+    gap: 20px;
 }
 
 #main ul li {
     display: grid;
-    grid-template-columns: 0.2fr 7fr 3fr 2fr 1fr;
+    grid-template-columns: 0.5fr 7fr 3fr 2fr 1fr;
+    align-self: center;
 }
 
-#main strong {
+#main ul li * {
+    align-self: center;
+}
+
+.li-header {
     font-family: 'Roboto-Bold';
+}
+
+.title {
+    grid-column-start: 2;
 }
 
 .delete-todo {
     padding: 10px;
-    height: 46px;
+    height: 40px;
     background: white;
     border: none;
     border-radius: 3px;
+}
+
+.delete-todo:hover {
+    background-color:crimson;
 }

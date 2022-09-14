@@ -147,7 +147,7 @@ export let view = (function() {
 
         const liHeader = createElementWithClass('li','li-header');
         
-        const titleHeader = createElementWithClass('p');
+        const titleHeader = createElementWithClass('p','title');
         titleHeader.textContent = 'Title';
         liHeader.appendChild(titleHeader);
         
