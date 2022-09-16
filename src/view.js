@@ -1,5 +1,6 @@
 import Logo from './assets/icons/logo-icon.png';
 import Magnify from './assets/icons/magnify.png';
+import {format} from 'date-fns';
 
 // A module (only one instance) for a View that control DOM manipulation
 export let view = (function() {
@@ -223,11 +224,11 @@ export let view = (function() {
         piLeft.appendChild(projectDesc);
 
         const projectDueDate = createElementWithClass('p','project-date');
-        projectDueDate.textContent = date;
+        projectDueDate.textContent = format(date, 'dd/MM/yyyy');
         piRight.appendChild(projectDueDate);
     }
 
-    function displayTodoInList(name,date,completed,priority) {
+    function displayTodoInList(name,date,completed,priority,overdued) {
         const ul = getElement('ul-todos');
 
         const li = createElementWithClass('li');
@@ -237,16 +238,31 @@ export let view = (function() {
         checkbox.checked = completed;
         li.appendChild(checkbox);
         
-        const titleP = createElementWithClass('p');
+        const titleP = createElementWithClass('p','todo');
         titleP.textContent = name;
+        if (completed) {
+            titleP.classList.add('completed');
+        }
         li.appendChild(titleP);
 
-        const dateP = createElementWithClass('p');
-        dateP.textContent = date;
+        const dateP = createElementWithClass('p','todo');
+        dateP.textContent = format(date, 'dd/MM/yyyy');
+        if (overdued && !completed) {
+            dateP.classList.add('high');
+        }
+        if (completed) {
+            dateP.classList.add('completed');
+        }
         li.appendChild(dateP);
 
-        const priorityP = createElementWithClass('p');
+        const priorityP = createElementWithClass('p','todo');
         priorityP.textContent = priority;
+        if (priority === 'high') {
+            priorityP.classList.add('high');
+        }
+        if (completed) {
+            priorityP.classList.add('completed');
+        }
         li.appendChild(priorityP);
 
         const deleteButton = createElementWithClass('button','delete-todo');

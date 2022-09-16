@@ -279,6 +279,10 @@ h2 {
     align-self: center;
 }
 
+.todo {
+    font-family: 'Roboto-Light';
+}
+
 .li-header {
     font-family: 'Roboto-Bold';
 }
@@ -287,9 +291,16 @@ h2 {
     grid-column-start: 2;
 }
 
+.high {
+    color: red;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
 .delete-todo {
-    padding: 10px;
-    height: 40px;
+    height: 30px;
     background: white;
     border: none;
     border-radius: 3px;

@@ -1,3 +1,5 @@
+import { compareAsc, endOfToday, parseISO } from "date-fns";
+
 // Factory (multiple instances) for todos
 export const Todo = (id,title,description,dueDate,priority) => {
     
@@ -6,10 +8,10 @@ export const Todo = (id,title,description,dueDate,priority) => {
     let _id = id;
     let _title = title;
     let _description = description;
-    let _dueDate = dueDate;
+    let _dueDate = new Date();
+    _dueDate = dueDate;
     let _priority = priority; // 'low' or 'high'
     let _completed = false;
-    let _overdue = false;
 
     // METHODS
     const getId = () => _id;
@@ -44,7 +46,15 @@ export const Todo = (id,title,description,dueDate,priority) => {
 
     const isCompleted = () => _completed;
 
-    const isOverdue = () => _overdue;
+    const isOverdued = () => {
+        const result = compareAsc(_dueDate,endOfToday());
+        
+        if (result === 1 || result === 0) {
+            return false;
+        } else if (result === -1) {
+            return true;
+        }
+    };
 
     const complete = () => _completed = true;
 
@@ -61,7 +71,7 @@ export const Todo = (id,title,description,dueDate,priority) => {
         setDueDate,
         setPriority,
         isCompleted,
-        isOverdue,
+        isOverdued,
         complete,
         unComplete
     };
@@ -73,7 +83,8 @@ export const Project = (id,title,description,dueDate) => {
     let _id = id;
     let _title = title;
     let _description = description;
-    let _dueDate = dueDate;
+    let _dueDate = new Date();
+    _dueDate = dueDate;
     let _completed = false;
     let _overdue = false;
     let _todos = []; // Array of Todo Factory type
