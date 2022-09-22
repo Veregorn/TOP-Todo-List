@@ -152,7 +152,7 @@ h2 {
 }
 
 #new-project button:hover {
-    background-color: #f59f277b;
+    background-color: #cd7d0efd;
 }
 
 #header {
@@ -308,4 +308,73 @@ h2 {
 
 .delete-todo:hover {
     background-color:crimson;
+}
+
+/* New TODO Popup */
+
+.popup {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.popup-content {
+    height: 630px;
+    width: 440px;
+    background: #DDE4EE;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+h2 {
+    font-family: 'Roboto-Bold';
+}
+
+.todoInput {
+    margin: 30px auto;
+    display: block;
+    width: 80%;
+    padding: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.todoArea {
+    margin: 30px auto;
+    display: block;
+    padding: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+label {
+    font-family: 'Roboto-Light';
+    font-size: 18px;
+    margin: 30px;
+}
+
+#saveTodo {
+    display: block;
+    margin: 40px auto;
+    padding: 20px 40px;
+    font-family: 'Roboto-Medium';
+    font-size: 18px;
+    border-radius: 10px;
+    background-color: #F59F27;
+    color: #000;
+    border: none;
+}
+
+#saveTodo:hover {
+    background-color: #cd7d0efd;
 }

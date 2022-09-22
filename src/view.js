@@ -1,6 +1,6 @@
 import Logo from './assets/icons/logo-icon.png';
 import Magnify from './assets/icons/magnify.png';
-import {format} from 'date-fns';
+import {format, endOfToday} from 'date-fns';
 
 // A module (only one instance) for a View that control DOM manipulation
 export let view = (function() {
@@ -129,6 +129,7 @@ export let view = (function() {
 
         const newTodo = createElementWithClass('button');
         newTodo.textContent = 'New TODO';
+        newTodo.addEventListener('click', function(){showTodosPopup()});
         const completeAll = createElementWithClass('button');
         completeAll.textContent = 'Complete ALL';
         const deleteAll = createElementWithClass('button');
@@ -161,6 +162,22 @@ export let view = (function() {
         liHeader.appendChild(priorityHeader);
         
         ulTodos.appendChild(liHeader);
+
+        // USEFUL LISTENERS
+        
+        // Listener that hide new TODO popup if user clicks outside it
+        document.addEventListener('click', function(element) {
+            // Check if the zone clicked is in the form div
+            const isInForm = element.target.closest('.popup-content');
+            // Check if the zone clicked is the 'New Book' button
+            const isButton = element.target.closest('button');
+            const popup = document.querySelector('.popup');
+            // If the users clicks out the form and the zone isn't the 'New Book' button and
+            // the form is visible...
+            if (!isInForm && !isButton && popup.style.display == 'flex') {
+                unshowTodosPopup();
+            }
+        });
     }
 
     function displayProjectsMenu(ids,titles) {
@@ -272,6 +289,91 @@ export let view = (function() {
         ul.appendChild(li);
     }
 
+    // Function that renders the popup to add new TODOs (not displayed yet, view
+    // showTodosPopup())
+    function displayTodosPopup() {
+        const main = getElement('main');
+
+        const popup = createElementWithClass('div','popup');
+        const popupContent = createElementWithClass('div','popup-content');
+        const form = createElementWithId('form','newTodoForm');
+
+        const header = createElementWithClass('h2','popup-header');
+        header.textContent = 'New TODO';
+        
+        const title = createElementWithClass('input','todoInput');
+        title.setAttribute('type','text');
+        title.setAttribute('name','todoTitle');
+        title.setAttribute('id','todoTitle');
+        title.setAttribute('placeholder','Title (required)');
+
+        const desc = createElementWithClass('textarea','todoArea');
+        desc.setAttribute('name','todoDesc');
+        desc.setAttribute('id','todoDesc');
+        desc.setAttribute('placeholder','Description (optional)');
+        desc.setAttribute('cols','31')
+        desc.setAttribute('rows','4')
+
+        const dateLabel = createElementWithClass('label','todoLabel');
+        dateLabel.setAttribute('for','todoDueDate');
+        dateLabel.textContent = 'Due Date';
+
+        const date = createElementWithClass('input','todoInput');
+        date.setAttribute('type','date');
+        date.setAttribute('name','todoDueDate');
+        date.setAttribute('id','todoDueDate');
+        date.setAttribute('value',format(endOfToday(),'yyyy-mm-dd'));
+        date.setAttribute('min',format(endOfToday(),'yyyy-mm-dd'));
+
+        const priorityLabel = createElementWithClass('label','todoLabel');
+        priorityLabel.setAttribute('for','priority');
+        priorityLabel.textContent = 'Priority';
+
+        const prioritySelect = createElementWithClass('select','todoInput');
+        prioritySelect.setAttribute('id','priority');
+
+        const low = createElementWithClass('option');
+        low.setAttribute('value','low');
+        low.setAttribute('selected','true');
+        low.textContent = 'low';
+
+        const high = createElementWithClass('option');
+        high.setAttribute('value','high');
+        high.textContent = 'high';
+
+        const button = createElementWithId('button','saveTodo');
+        button.setAttribute('type','button');
+        button.textContent = 'Save TODO';
+
+        prioritySelect.appendChild(low);
+        prioritySelect.appendChild(high);
+        form.appendChild(header);
+        form.appendChild(title);
+        form.appendChild(desc);
+        form.appendChild(dateLabel);
+        form.appendChild(date);
+        form.appendChild(priorityLabel);
+        form.appendChild(prioritySelect);
+        form.appendChild(button);
+        popupContent.appendChild(form);
+        popup.appendChild(popupContent);
+        main.appendChild(popup);
+    }
+
+    // Called by event listener associated to the 'New TODO' button
+    function showTodosPopup() {
+        const popup = document.querySelector('.popup');
+        popup.style.display = "flex";
+    }
+
+    function unshowTodosPopup() {
+        const popup = document.querySelector('.popup');
+        popup.style.display = "none";
+        // Form needs to be cleaned
+        const form = getElement('newTodoForm');
+        form.reset();
+    }
+
     return {
         createElementWithClass,
         createElementWithId,
@@ -280,6 +382,7 @@ export let view = (function() {
         displayProjectsMenu,
         displayUserInfo,
         displayProjectInfo,
-        displayTodoInList
+        displayTodoInList,
+        displayTodosPopup
     }
 })();
