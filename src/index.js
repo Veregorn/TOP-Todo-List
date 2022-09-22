@@ -64,3 +64,4 @@ for (let i = 0; i < defProject.getNumberOfTodos(); i++) {
 }
 
 view.displayTodosPopup();
+view.displayProjectsPopup();

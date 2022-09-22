@@ -83,6 +83,7 @@ export let view = (function() {
 
         const button = createElementWithClass('button');
         button.textContent = "New Project";
+        button.addEventListener('click', function(){showProjectsPopup()});
         newProjDiv.appendChild(button);
 
         // HEADER
@@ -171,13 +172,19 @@ export let view = (function() {
             const isInForm = element.target.closest('.popup-content');
             // Check if the zone clicked is the 'New Book' button
             const isButton = element.target.closest('button');
-            const popup = document.querySelector('.popup');
-            // If the users clicks out the form and the zone isn't the 'New Book' button and
+            const todoPopup = document.querySelector('#todoPopup');
+            const projectPopup = document.querySelector('#projectPopup');
+            // If the users clicks out the form and the zone isn't a button and
             // the form is visible...
-            if (!isInForm && !isButton && popup.style.display == 'flex') {
+            if (!isInForm && !isButton && todoPopup.style.display == 'flex') {
                 unshowTodosPopup();
             }
+            if (!isInForm && !isButton && projectPopup.style.display == 'flex') {
+                unshowProjectsPopup();
+            }
         });
+
+
     }
 
     function displayProjectsMenu(ids,titles) {
@@ -295,41 +302,45 @@ export let view = (function() {
         const main = getElement('main');
 
         const popup = createElementWithClass('div','popup');
+        popup.setAttribute('id','todoPopup');
         const popupContent = createElementWithClass('div','popup-content');
+        popupContent.setAttribute('id','todoPopupContent');
         const form = createElementWithId('form','newTodoForm');
+
+        // FORM CONTENT
 
         const header = createElementWithClass('h2','popup-header');
         header.textContent = 'New TODO';
         
-        const title = createElementWithClass('input','todoInput');
+        const title = createElementWithClass('input','formInput');
         title.setAttribute('type','text');
         title.setAttribute('name','todoTitle');
         title.setAttribute('id','todoTitle');
         title.setAttribute('placeholder','Title (required)');
 
-        const desc = createElementWithClass('textarea','todoArea');
+        const desc = createElementWithClass('textarea','formArea');
         desc.setAttribute('name','todoDesc');
         desc.setAttribute('id','todoDesc');
         desc.setAttribute('placeholder','Description (optional)');
-        desc.setAttribute('cols','31')
-        desc.setAttribute('rows','4')
+        desc.setAttribute('cols','31');
+        desc.setAttribute('rows','4');
 
-        const dateLabel = createElementWithClass('label','todoLabel');
+        const dateLabel = createElementWithClass('label','formLabel');
         dateLabel.setAttribute('for','todoDueDate');
         dateLabel.textContent = 'Due Date';
 
-        const date = createElementWithClass('input','todoInput');
+        const date = createElementWithClass('input','formInput');
         date.setAttribute('type','date');
         date.setAttribute('name','todoDueDate');
         date.setAttribute('id','todoDueDate');
         date.setAttribute('value',format(endOfToday(),'yyyy-mm-dd'));
         date.setAttribute('min',format(endOfToday(),'yyyy-mm-dd'));
 
-        const priorityLabel = createElementWithClass('label','todoLabel');
+        const priorityLabel = createElementWithClass('label','formLabel');
         priorityLabel.setAttribute('for','priority');
         priorityLabel.textContent = 'Priority';
 
-        const prioritySelect = createElementWithClass('select','todoInput');
+        const prioritySelect = createElementWithClass('select','formInput');
         prioritySelect.setAttribute('id','priority');
 
         const low = createElementWithClass('option');
@@ -341,7 +352,8 @@ export let view = (function() {
         high.setAttribute('value','high');
         high.textContent = 'high';
 
-        const button = createElementWithId('button','saveTodo');
+        const button = createElementWithClass('button','formButton');
+        button.setAttribute('id','saveTodo');
         button.setAttribute('type','button');
         button.textContent = 'Save TODO';
 
@@ -362,15 +374,87 @@ export let view = (function() {
 
     // Called by event listener associated to the 'New TODO' button
     function showTodosPopup() {
-        const popup = document.querySelector('.popup');
+        const popup = document.querySelector('#todoPopup');
         popup.style.display = "flex";
     }
 
+    // Called by HTML document element listener
     function unshowTodosPopup() {
-        const popup = document.querySelector('.popup');
+        const popup = document.querySelector('#todoPopup');
         popup.style.display = "none";
         // Form needs to be cleaned
         const form = getElement('newTodoForm');
+        form.reset();
+    }
+
+    // Function that renders the popup to add new Projects (not displayed yet, view
+    // showProjectsPopup())
+    function displayProjectsPopup() {
+        const main = getElement('main');
+
+        const popup = createElementWithClass('div','popup');
+        popup.setAttribute('id','projectPopup');
+        const popupContent = createElementWithClass('div','popup-content');
+        popupContent.setAttribute('id','projectPopupContent');
+        const form = createElementWithId('form','newProjectForm');
+
+        // FORM CONTENT
+        
+        const header = createElementWithClass('h2','popup-header');
+        header.textContent = 'New Project';
+        
+        const title = createElementWithClass('input','formInput');
+        title.setAttribute('type','text');
+        title.setAttribute('name','projectTitle');
+        title.setAttribute('id','projectTitle');
+        title.setAttribute('placeholder','Title (required)');
+
+        const desc = createElementWithClass('textarea','formArea');
+        desc.setAttribute('name','projectDesc');
+        desc.setAttribute('id','projectDesc');
+        desc.setAttribute('placeholder','Description (optional)');
+        desc.setAttribute('cols','31');
+        desc.setAttribute('rows','4');
+
+        const dateLabel = createElementWithClass('label','formLabel');
+        dateLabel.setAttribute('for','projectDueDate');
+        dateLabel.textContent = 'Due Date';
+
+        const date = createElementWithClass('input','formInput');
+        date.setAttribute('type','date');
+        date.setAttribute('name','projectDueDate');
+        date.setAttribute('id','projectDueDate');
+        date.setAttribute('value',format(endOfToday(),'yyyy-mm-dd'));
+        date.setAttribute('min',format(endOfToday(),'yyyy-mm-dd'));
+
+        const button = createElementWithClass('button','formButton');
+        button.setAttribute('id','saveProject');
+        button.setAttribute('type','button');
+        button.textContent = 'Save Project';
+
+        form.appendChild(header);
+        form.appendChild(title);
+        form.appendChild(desc);
+        form.appendChild(dateLabel);
+        form.appendChild(date);
+        form.appendChild(button);
+        popupContent.appendChild(form);
+        popup.appendChild(popupContent);
+        main.appendChild(popup);
+    }
+
+    // Called by event listener associated to the 'New Project' button
+    function showProjectsPopup() {
+        const popup = document.querySelector('#projectPopup');
+        popup.style.display = "flex";
+    }
+
+    // Called by HTML document element listener
+    function unshowProjectsPopup() {
+        const popup = document.querySelector('#projectPopup');
+        popup.style.display = "none";
+        // Form needs to be cleaned
+        const form = getElement('newProjectForm');
         form.reset();
     }
 
@@ -383,6 +467,7 @@ export let view = (function() {
         displayUserInfo,
         displayProjectInfo,
         displayTodoInList,
-        displayTodosPopup
+        displayTodosPopup,
+        displayProjectsPopup
     }
 })();

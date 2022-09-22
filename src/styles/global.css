@@ -310,7 +310,7 @@ h2 {
     background-color:crimson;
 }
 
-/* New TODO Popup */
+/* Popups */
 
 .popup {
     background-color: rgba(0, 0, 0, 0.6);
@@ -326,8 +326,6 @@ h2 {
 }
 
 .popup-content {
-    height: 630px;
-    width: 440px;
     background: #DDE4EE;
     padding: 20px;
     border-radius: 5px;
@@ -338,7 +336,7 @@ h2 {
     font-family: 'Roboto-Bold';
 }
 
-.todoInput {
+.formInput {
     margin: 30px auto;
     display: block;
     width: 80%;
@@ -348,7 +346,7 @@ h2 {
     font-size: 18px;
 }
 
-.todoArea {
+.formArea {
     margin: 30px auto;
     display: block;
     padding: 20px;
@@ -357,13 +355,13 @@ h2 {
     font-size: 18px;
 }
 
-label {
+.formLabel {
     font-family: 'Roboto-Light';
     font-size: 18px;
     margin: 30px;
 }
 
-#saveTodo {
+.formButton {
     display: block;
     margin: 40px auto;
     padding: 20px 40px;
@@ -375,6 +373,20 @@ label {
     border: none;
 }
 
-#saveTodo:hover {
+.formButton:hover {
     background-color: #cd7d0efd;
+}
+
+/* New TODO Popup */
+
+#todoPopupContent {
+    height: 630px;
+    width: 440px;
+}
+
+/* New Project Popup */
+
+#projectPopupContent {
+    height: 530px;
+    width: 440px;
 }
