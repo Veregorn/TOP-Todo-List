@@ -65,3 +65,16 @@ for (let i = 0; i < defProject.getNumberOfTodos(); i++) {
 
 view.displayTodosPopup();
 view.displayProjectsPopup();
+
+// A module for the controller (App logic)
+export let controller = (function() {
+    'use strict';
+
+    function createNewProject() {
+        alert("All the data is good!");
+    }
+
+    return {
+        createNewProject
+    }
+})();

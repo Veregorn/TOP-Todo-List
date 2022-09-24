@@ -1,6 +1,7 @@
 import Logo from './assets/icons/logo-icon.png';
 import Magnify from './assets/icons/magnify.png';
-import {format, endOfToday} from 'date-fns';
+import {format, endOfToday, compareAsc} from 'date-fns';
+import {controller} from './index.js';
 
 // A module (only one instance) for a View that control DOM manipulation
 export let view = (function() {
@@ -431,6 +432,16 @@ export let view = (function() {
         button.setAttribute('id','saveProject');
         button.setAttribute('type','button');
         button.textContent = 'Save Project';
+        button.addEventListener('click', function(){
+            const dateObj = new Date(date.value);
+            if (title.value.length === 0) {
+                alert("Title can't be empty!");
+            } else if (compareAsc(dateObj,endOfToday()) === -1) {
+                alert("Don't create projects in the past. Please, look at your future!");
+            } else {
+                controller.createNewProject();
+            }
+        });
 
         form.appendChild(header);
         form.appendChild(title);
