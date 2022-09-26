@@ -439,7 +439,7 @@ export let view = (function() {
             } else if (compareAsc(dateObj,endOfToday()) === -1) {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
-                controller.createNewProject();
+                controller.createProjectForCurrentUser(title.value,desc.value,date.value);
             }
         });
 

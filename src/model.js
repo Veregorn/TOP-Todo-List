@@ -165,13 +165,18 @@ export const Project = (id,title,description,dueDate) => {
 };
 
 // Factory for users
-export const User = (name,path) => {
+export const User = (id,name,path) => {
     // PROPERTIES
+    let _id = id;
     let _name = name; // User name
     let _avatar = new Image(); // User avatar
     _avatar.src = path;
     let _projects = []; // The user has an array of Projects
 
+    function getId() {
+        return _id;
+    }
+    
     // We can change user's name
     function setName(name) {
         _name = name;
@@ -208,6 +213,7 @@ export const User = (name,path) => {
     }
 
     return {
+        getId,
         setName,
         getName,
         setAvatar,
