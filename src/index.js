@@ -20,6 +20,7 @@ export let controller = (function() {
         const project = Project(projectsIdCounter,title,desc,date);
         projectsIdCounter++;
         currentUser.addProject(project);
+        refreshProjects(currentUser);
         return project;
     }
 
@@ -35,14 +36,38 @@ export let controller = (function() {
         return user;
     }
 
+    // Extracts projects from model, constructs 2 arrays with ids and titles
+    // and pass them to the view to so left menu (projects)
+    function refreshProjects(user) {
+        // Displaying user's projects in left menu
+        // First create an array with projects ids
+        let ids = [];
+        for (let i = 0; i < user.getProjects().length; i++) {
+            const element = user.getProjects()[i];
+            ids.push(element.getId());
+        }
+        // Then create another array with projects titles
+        let titles = [];
+        for (let i = 0; i < user.getProjects().length; i++) {
+            const element = user.getProjects()[i];
+            titles.push(element.getTitle());
+        }
+
+        view.displayProjectsMenu(ids,titles);
+    }
+
     return {
         createProjectForCurrentUser,
         createTodo,
-        createUser
+        createUser,
+        refreshProjects
     }
 })();
 
-// Let's create a new user and asign it to current User using the App
+// Displaying main interface
+view.loadMainUI();
+
+// Let's create a new user and assign it to current User using the App
 currentUser = controller.createUser("Veregorn",Avatar);
 
 // Let's create some dates to use for projects and todos
@@ -71,23 +96,6 @@ anotherProject.addTodo(todo3);
 const project3 = controller.createProjectForCurrentUser("Develop a web3 App","This is the project number 3",date4);
 const project4 = controller.createProjectForCurrentUser("Learn how to cook a Spanish Omelette","This is the project number 4",date4);
 
-view.loadMainUI();
-
-// Displaying user's projects in left menu
-// First create an array with projects ids
-let ids = [];
-for (let i = 0; i < currentUser.getProjects().length; i++) {
-    const element = currentUser.getProjects()[i];
-    ids.push(element.getId());
-}
-// Then create another array with projects titles
-let titles = [];
-for (let i = 0; i < currentUser.getProjects().length; i++) {
-    const element = currentUser.getProjects()[i];
-    titles.push(element.getTitle());
-}
-
-view.displayProjectsMenu(ids,titles);
 view.displayUserInfo(currentUser.getAvatar(),currentUser.getName());
 view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
 

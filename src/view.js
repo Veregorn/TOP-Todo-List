@@ -1,6 +1,6 @@
 import Logo from './assets/icons/logo-icon.png';
 import Magnify from './assets/icons/magnify.png';
-import {format, endOfToday, compareAsc} from 'date-fns';
+import {format, startOfToday, endOfToday, compareAsc} from 'date-fns';
 import {controller} from './index.js';
 
 // A module (only one instance) for a View that control DOM manipulation
@@ -212,6 +212,10 @@ export let view = (function() {
             if (i > 0) {
                 const deleteButton = createElementWithClass('button','delete');
                 deleteButton.textContent = 'Delete';
+                // An event listener is needed to call the function in the controller
+                deleteButton.addEventListener('click', function(){
+                    controller.deleteProjectFromCurrentUser();
+                });
                 li.appendChild(deleteButton);
             }
 
@@ -436,10 +440,11 @@ export let view = (function() {
             const dateObj = new Date(date.value);
             if (title.value.length === 0) {
                 alert("Title can't be empty!");
-            } else if (compareAsc(dateObj,endOfToday()) === -1) {
+            } else if (compareAsc(dateObj,startOfToday()) === -1) {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
                 controller.createProjectForCurrentUser(title.value,desc.value,date.value);
+                unshowProjectsPopup();
             }
         });
 
