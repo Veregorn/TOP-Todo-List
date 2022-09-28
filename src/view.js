@@ -204,8 +204,11 @@ export let view = (function() {
             
             // Inside each <li></li> there is a <a></a>
             const a = createElementWithClass('a','project-name');
-            a.setAttribute('href','');
+            a.setAttribute('href','#');
             a.textContent = titles[i];
+            a.addEventListener('click', function(){
+                controller.getProjectInfo(ids[i]);
+            });
             li.appendChild(a);
 
             // Projects will also have a delete button (except 'default' one - the first)
@@ -244,17 +247,29 @@ export let view = (function() {
         const piLeft = getElement('piLeft');
         const piRight = getElement('piRight');
         
-        const projectTitle = createElementWithClass('p','project-title');
-        projectTitle.textContent = title;
-        piLeft.appendChild(projectTitle);
+        // if nodes exist yet we don't need to create them, only get them and
+        // edit their content
+        if (piLeft.firstChild && piRight.firstChild) {
+            const projectTitle = getElement('project-title');
+            const projectDesc = getElement('project-desc');
+            const projectDueDate = getElement('project-date');
 
-        const projectDesc = createElementWithClass('p','project-desc');
-        projectDesc.textContent = desc;
-        piLeft.appendChild(projectDesc);
+            projectTitle.textContent = title;
+            projectDesc.textContent = desc;
+            projectDueDate.textContent = format(date, 'dd/MM/yyyy');
+        } else {
+            const projectTitle = createElementWithId('p','project-title');
+            const projectDesc = createElementWithId('p','project-desc');
+            const projectDueDate = createElementWithId('p','project-date');
 
-        const projectDueDate = createElementWithClass('p','project-date');
-        projectDueDate.textContent = format(date, 'dd/MM/yyyy');
-        piRight.appendChild(projectDueDate);
+            projectTitle.textContent = title;
+            projectDesc.textContent = desc;
+            projectDueDate.textContent = format(date, 'dd/MM/yyyy');
+
+            piLeft.appendChild(projectTitle);
+            piLeft.appendChild(projectDesc);
+            piRight.appendChild(projectDueDate);
+        }
     }
 
     function displayTodoInList(name,date,completed,priority,overdued) {

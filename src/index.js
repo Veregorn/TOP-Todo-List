@@ -61,12 +61,28 @@ export let controller = (function() {
         refreshProjects(currentUser);
     }
 
+    // When project title is clicked in left menu, controller retrieves info
+    // of this project and call view to show that info
+    function getProjectInfo(id) {
+        // First we take the project from current user
+        const project = currentUser.getProject(id);
+
+        // Then obtain the values we need
+        const title = project.getTitle();
+        const desc = project.getDescription();
+        const date = project.getDueDate();
+
+        // Last we call our function in the view
+        view.displayProjectInfo(title,desc,date);
+    }
+
     return {
         createProjectForCurrentUser,
         createTodo,
         createUser,
         refreshProjects,
-        deleteProjectFromCurrentUser
+        deleteProjectFromCurrentUser,
+        getProjectInfo
     }
 })();
 

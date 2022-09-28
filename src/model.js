@@ -212,6 +212,15 @@ export const User = (id,name,path) => {
         }
     }
 
+    function getProject(id) {
+        for (let i = 0; i < _projects.length; i++) {
+            const element = _projects[i];
+            if (element.getId() === id) {
+                return element;
+            }
+        }
+    }
+
     return {
         getId,
         setName,
@@ -220,6 +229,7 @@ export const User = (id,name,path) => {
         getAvatar,
         getProjects,
         addProject,
-        deleteProject
+        deleteProject,
+        getProject
     }
 };
