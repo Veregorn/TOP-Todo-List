@@ -214,7 +214,7 @@ export let view = (function() {
                 deleteButton.textContent = 'Delete';
                 // An event listener is needed to call the function in the controller
                 deleteButton.addEventListener('click', function(){
-                    controller.deleteProjectFromCurrentUser();
+                    controller.deleteProjectFromCurrentUser(ids[i]);
                 });
                 li.appendChild(deleteButton);
             }

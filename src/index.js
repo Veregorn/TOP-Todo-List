@@ -56,11 +56,17 @@ export let controller = (function() {
         view.displayProjectsMenu(ids,titles);
     }
 
+    function deleteProjectFromCurrentUser(id) {
+        currentUser.deleteProject(id);
+        refreshProjects(currentUser);
+    }
+
     return {
         createProjectForCurrentUser,
         createTodo,
         createUser,
-        refreshProjects
+        refreshProjects,
+        deleteProjectFromCurrentUser
     }
 })();
 
