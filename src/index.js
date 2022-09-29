@@ -76,13 +76,25 @@ export let controller = (function() {
         view.displayProjectInfo(title,desc,date);
     }
 
+    function getTodosForThisProject(id) {
+        // First we take the project from current user
+        const project = currentUser.getProject(id);
+
+        // Displaying TODOs in a project
+        for (let i = 0; i < project.getNumberOfTodos(); i++) {
+            const todo = project.getTodoByOrder(i);
+            view.displayTodoInList(todo.getTitle(),todo.getDueDate(),todo.isCompleted(),todo.getPriority(),todo.isOverdued());
+        }
+    }
+
     return {
         createProjectForCurrentUser,
         createTodo,
         createUser,
         refreshProjects,
         deleteProjectFromCurrentUser,
-        getProjectInfo
+        getProjectInfo,
+        getTodosForThisProject
     }
 })();
 
@@ -108,7 +120,7 @@ const todo3 = controller.createTodo("todo3","I'm todo number 3",date1,"high");
 const todo4 = controller.createTodo("Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
 todo4.complete();
 
-// Let's add some of out todos to the project created
+// Let's add some of our todos to the project created
 defProject.addTodo(todo1);
 defProject.addTodo(todo2);
 defProject.addTodo(todo4);
@@ -121,11 +133,7 @@ const project4 = controller.createProjectForCurrentUser("Learn how to cook a Spa
 view.displayUserInfo(currentUser.getAvatar(),currentUser.getName());
 view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
 
-// Displaying TODOs in a project
-for (let i = 0; i < defProject.getNumberOfTodos(); i++) {
-     const todo = defProject.getTodoByOrder(i);
-     view.displayTodoInList(todo.getTitle(),todo.getDueDate(),todo.isCompleted(),todo.getPriority(),todo.isOverdued());
-}
+controller.getTodosForThisProject(1);
 
 view.displayTodosPopup();
 view.displayProjectsPopup();

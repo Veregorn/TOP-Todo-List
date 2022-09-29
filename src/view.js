@@ -208,6 +208,8 @@ export let view = (function() {
             a.textContent = titles[i];
             a.addEventListener('click', function(){
                 controller.getProjectInfo(ids[i]);
+                removeTodosFromDom();
+                controller.getTodosForThisProject(ids[i]);
             });
             li.appendChild(a);
 
@@ -487,6 +489,33 @@ export let view = (function() {
         // Form needs to be cleaned
         const form = getElement('newProjectForm');
         form.reset();
+    }
+
+    function removeTodosFromDom() {
+        // Let's select element father of all todos
+        const ulTodos = getElement('ul-todos');
+
+        // Delete all nodes
+        while (ulTodos.firstChild) {
+            ulTodos.removeChild(ulTodos.lastChild);
+        }
+
+        // Last we need to create the header of TODOs list again
+        const liHeader = createElementWithClass('li','li-header');
+        
+        const titleHeader = createElementWithClass('p','title');
+        titleHeader.textContent = 'Title';
+        liHeader.appendChild(titleHeader);
+        
+        const dateHeader = createElementWithClass('p');
+        dateHeader.textContent = 'Due Date';
+        liHeader.appendChild(dateHeader);
+
+        const priorityHeader = createElementWithClass('p');
+        priorityHeader.textContent = 'Priority';
+        liHeader.appendChild(priorityHeader);
+        
+        ulTodos.appendChild(liHeader);
     }
 
     return {
