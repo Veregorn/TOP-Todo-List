@@ -12,6 +12,10 @@ let usersIdCounter = 1;
 // at the moment
 let currentUser = User();
 
+// One global variable to control what project user is working in
+// By default is number 1 (the ID of the default project)
+let currentProject = 1;
+
 // A module for the controller (App logic)
 export let controller = (function() {
     'use strict';
@@ -72,8 +76,14 @@ export let controller = (function() {
         const desc = project.getDescription();
         const date = project.getDueDate();
 
-        // Last we call our function in the view
+        // We call our function in the view
         view.displayProjectInfo(title,desc,date);
+
+        // Last we get all todos for this project
+        getTodosForThisProject(id);
+
+        // PD: We need to update global variable
+        currentProject = id;
     }
 
     function getTodosForThisProject(id) {
@@ -83,7 +93,21 @@ export let controller = (function() {
         // Displaying TODOs in a project
         for (let i = 0; i < project.getNumberOfTodos(); i++) {
             const todo = project.getTodoByOrder(i);
-            view.displayTodoInList(todo.getTitle(),todo.getDueDate(),todo.isCompleted(),todo.getPriority(),todo.isOverdued());
+            view.displayTodoInList(todo.getId(),todo.getTitle(),todo.getDueDate(),todo.isCompleted(),todo.getPriority(),todo.isOverdued());
+        }
+    }
+
+    function updateTodoState(id,checked) {
+        // Retrieving project user is working in
+        const project = currentUser.getProject(currentProject);
+
+        // Retrieving todo
+        const todo = project.getTodoById(id);
+
+        if (checked) {
+            todo.complete();
+        } else {
+            todo.unComplete();
         }
     }
 
@@ -94,7 +118,8 @@ export let controller = (function() {
         refreshProjects,
         deleteProjectFromCurrentUser,
         getProjectInfo,
-        getTodosForThisProject
+        getTodosForThisProject,
+        updateTodoState
     }
 })();
 

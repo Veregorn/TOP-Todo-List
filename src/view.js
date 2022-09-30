@@ -207,9 +207,8 @@ export let view = (function() {
             a.setAttribute('href','#');
             a.textContent = titles[i];
             a.addEventListener('click', function(){
-                controller.getProjectInfo(ids[i]);
                 removeTodosFromDom();
-                controller.getTodosForThisProject(ids[i]);
+                controller.getProjectInfo(ids[i]);
             });
             li.appendChild(a);
 
@@ -274,7 +273,7 @@ export let view = (function() {
         }
     }
 
-    function displayTodoInList(name,date,completed,priority,overdued) {
+    function displayTodoInList(id,name,date,completed,priority,overdued) {
         const ul = getElement('ul-todos');
 
         const li = createElementWithClass('li');
@@ -282,6 +281,25 @@ export let view = (function() {
         const checkbox = createElementWithClass('input');
         checkbox.type = 'checkbox';
         checkbox.checked = completed;
+        checkbox.addEventListener('change', function(){
+            // First state in the model must to be updated
+            controller.updateTodoState(id,this.checked);
+
+            // Now I need to select siblings of this checkbox to update class completed
+            const title = this.nextSibling;
+            const desc = title.nextSibling;
+            const date = desc.nextSibling;
+
+            if (this.checked) {
+                title.classList.add('completed');
+                desc.classList.add('completed');
+                date.classList.add('completed');
+            } else {
+                title.classList.remove('completed');
+                desc.classList.remove('completed');
+                date.classList.remove('completed');
+            }
+        });
         li.appendChild(checkbox);
         
         const titleP = createElementWithClass('p','todo');
