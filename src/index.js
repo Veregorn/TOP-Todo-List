@@ -28,10 +28,12 @@ export let controller = (function() {
         return project;
     }
 
-    function createTodo(title,desc,date,priority) {
+    function createTodoInCurrentProject(title,desc,date,priority) {
         const todo = Todo(todosIdCounter,title,desc,date,priority);
         todosIdCounter++;
-        return todo;
+        const project = currentUser.getProject(currentProject);
+        project.addTodo(todo);
+        refreshTodos(project);
     }
 
     function createUser(name,path) {
@@ -60,9 +62,19 @@ export let controller = (function() {
         view.displayProjectsMenu(ids,titles);
     }
 
+    function refreshTodos(project) {
+        view.removeTodosFromDom();
+        getTodosForThisProject(project.getId());
+    }
+
     function deleteProjectFromCurrentUser(id) {
         currentUser.deleteProject(id);
         refreshProjects(currentUser);
+        // If project deleted is current project I need to display another one
+        // Default one
+        if (currentProject === id) {
+            getProjectInfo(1);
+        }
     }
 
     // When project title is clicked in left menu, controller retrieves info
@@ -80,7 +92,7 @@ export let controller = (function() {
         view.displayProjectInfo(title,desc,date);
 
         // Last we get all todos for this project
-        getTodosForThisProject(id);
+        refreshTodos(project);
 
         // PD: We need to update global variable
         currentProject = id;
@@ -111,15 +123,27 @@ export let controller = (function() {
         }
     }
 
+    function deleteTodoFromCurrentUser(id) {
+        // Retrieving project user is working in
+        const project = currentUser.getProject(currentProject);
+
+        project.deleteTodo(id);
+
+        // Now I need to refresh todos in DOM
+        view.removeTodosFromDom();
+        getTodosForThisProject(currentProject);
+    }
+
     return {
         createProjectForCurrentUser,
-        createTodo,
+        createTodoInCurrentProject,
         createUser,
         refreshProjects,
         deleteProjectFromCurrentUser,
         getProjectInfo,
         getTodosForThisProject,
-        updateTodoState
+        updateTodoState,
+        deleteTodoFromCurrentUser
     }
 })();
 
@@ -138,27 +162,18 @@ const date4 = new Date(2023, 0, 1);
 // Now let's create some projects
 const defProject = controller.createProjectForCurrentUser("Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
 
-// I need some todos to fill in the projects with
-const todo1 = controller.createTodo("Do the housework","I'm todo number 1",date1,"high");
-const todo2 = controller.createTodo("Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
-const todo3 = controller.createTodo("todo3","I'm todo number 3",date1,"high");
-const todo4 = controller.createTodo("Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
-todo4.complete();
-
-// Let's add some of our todos to the project created
-defProject.addTodo(todo1);
-defProject.addTodo(todo2);
-defProject.addTodo(todo4);
+// I need some todos (these are added to current project, 'defProject' by default)
+controller.createTodoInCurrentProject("Do the housework","I'm todo number 1",date1,"high");
+controller.createTodoInCurrentProject("Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
+controller.createTodoInCurrentProject("todo3","I'm todo number 3",date1,"high");
+controller.createTodoInCurrentProject("Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
 
 const anotherProject = controller.createProjectForCurrentUser("Another Project","This is the project number 2",date4);
-anotherProject.addTodo(todo3);
 const project3 = controller.createProjectForCurrentUser("Develop a web3 App","This is the project number 3",date4);
 const project4 = controller.createProjectForCurrentUser("Learn how to cook a Spanish Omelette","This is the project number 4",date4);
 
 view.displayUserInfo(currentUser.getAvatar(),currentUser.getName());
 view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
-
-controller.getTodosForThisProject(1);
 
 view.displayTodosPopup();
 view.displayProjectsPopup();

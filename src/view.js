@@ -167,7 +167,7 @@ export let view = (function() {
 
         // USEFUL LISTENERS
         
-        // Listener that hide new TODO popup if user clicks outside it
+        // Listener that hide new TODO or new PROJECT popup if user clicks outside it
         document.addEventListener('click', function(element) {
             // Check if the zone clicked is in the form div
             const isInForm = element.target.closest('.popup-content');
@@ -207,7 +207,6 @@ export let view = (function() {
             a.setAttribute('href','#');
             a.textContent = titles[i];
             a.addEventListener('click', function(){
-                removeTodosFromDom();
                 controller.getProjectInfo(ids[i]);
             });
             li.appendChild(a);
@@ -331,6 +330,9 @@ export let view = (function() {
 
         const deleteButton = createElementWithClass('button','delete-todo');
         deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function(){
+            controller.deleteTodoFromCurrentUser(id);
+        });
         li.appendChild(deleteButton);
         
         ul.appendChild(li);
@@ -396,6 +398,17 @@ export let view = (function() {
         button.setAttribute('id','saveTodo');
         button.setAttribute('type','button');
         button.textContent = 'Save TODO';
+        button.addEventListener('click', function(){
+            const dateObj = new Date(date.value);
+            if (title.value.length === 0) {
+                alert("Title can't be empty!");
+            } else if (compareAsc(dateObj,startOfToday()) === -1) {
+                alert("Don't create TODOs in the past. Please, look at your future!");
+            } else {
+                controller.createTodoInCurrentProject(title.value,desc.value,dateObj,prioritySelect.value);
+                unshowTodosPopup();
+            }
+        });
 
         prioritySelect.appendChild(low);
         prioritySelect.appendChild(high);
@@ -478,7 +491,7 @@ export let view = (function() {
             } else if (compareAsc(dateObj,startOfToday()) === -1) {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
-                controller.createProjectForCurrentUser(title.value,desc.value,date.value);
+                controller.createProjectForCurrentUser(title.value,desc.value,dateObj);
                 unshowProjectsPopup();
             }
         });
@@ -546,6 +559,7 @@ export let view = (function() {
         displayProjectInfo,
         displayTodoInList,
         displayTodosPopup,
-        displayProjectsPopup
+        displayProjectsPopup,
+        removeTodosFromDom
     }
 })();
