@@ -375,8 +375,8 @@ export let view = (function() {
         date.setAttribute('type','date');
         date.setAttribute('name','todoDueDate');
         date.setAttribute('id','todoDueDate');
-        date.setAttribute('value',format(endOfToday(),'yyyy-mm-dd'));
-        date.setAttribute('min',format(endOfToday(),'yyyy-mm-dd'));
+        date.valueAsDate = new Date();
+        date.setAttribute('min',date.valueAsDate);
 
         const priorityLabel = createElementWithClass('label','formLabel');
         priorityLabel.setAttribute('for','priority');
@@ -399,13 +399,12 @@ export let view = (function() {
         button.setAttribute('type','button');
         button.textContent = 'Save TODO';
         button.addEventListener('click', function(){
-            const dateObj = new Date(date.value);
             if (title.value.length === 0) {
                 alert("Title can't be empty!");
-            } else if (compareAsc(dateObj,startOfToday()) === -1) {
+            } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
                 alert("Don't create TODOs in the past. Please, look at your future!");
             } else {
-                controller.createTodoInCurrentProject(title.value,desc.value,dateObj,prioritySelect.value);
+                controller.createTodoInCurrentProject(title.value,desc.value,date.valueAsDate,prioritySelect.value);
                 unshowTodosPopup();
             }
         });
@@ -429,6 +428,10 @@ export let view = (function() {
     function showTodosPopup() {
         const popup = document.querySelector('#todoPopup');
         popup.style.display = "flex";
+        // Reasign default value to Due Date after the reset applied 
+        // in the unshow function
+        const date = getElement('todoDueDate');
+        date.valueAsDate = new Date();
     }
 
     // Called by HTML document element listener
