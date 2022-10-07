@@ -138,7 +138,10 @@ export let view = (function() {
             controller.completeAllTodos();
         });
         const deleteAll = createElementWithClass('button');
-        deleteAll.textContent = 'Delete All';
+        deleteAll.textContent = 'Delete ALL';
+        deleteAll.addEventListener('click',function() {
+            controller.deleteAllTodos();
+        });
 
         buttons.appendChild(newTodo);
         buttons.appendChild(completeAll);

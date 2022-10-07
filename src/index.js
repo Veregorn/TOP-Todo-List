@@ -123,6 +123,20 @@ export let controller = (function() {
         refreshTodos(project);
     }
 
+    function deleteAllTodos() {
+        // First we take the project from current user
+        const project = currentUser.getProject(currentProject);
+
+        // Deleting all todos in that project
+        while (project.getNumberOfTodos() > 0) {
+            const todo = project.getTodoByOrder(0);
+            project.deleteTodo(todo.getId());
+        }
+
+        // Last, we need to update changes in user's screen
+        refreshTodos(project);
+    }
+
     function updateTodoState(id,checked) {
         // Retrieving project user is working in
         const project = currentUser.getProject(currentProject);
@@ -158,7 +172,8 @@ export let controller = (function() {
         getTodosForThisProject,
         updateTodoState,
         deleteTodoFromCurrentUser,
-        completeAllTodos
+        completeAllTodos,
+        deleteAllTodos
     }
 })();
 
