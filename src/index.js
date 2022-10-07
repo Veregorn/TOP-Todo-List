@@ -109,6 +109,20 @@ export let controller = (function() {
         }
     }
 
+    function completeAllTodos() {
+        // First we take the project from current user
+        const project = currentUser.getProject(currentProject);
+
+        // Completing All TODOs in that project
+        for (let i = 0; i < project.getNumberOfTodos(); i++) {
+            const todo = project.getTodoByOrder(i);
+            updateTodoState(todo.getId(),true);
+        }
+
+        // Last, we need to update changes in user's screen
+        refreshTodos(project);
+    }
+
     function updateTodoState(id,checked) {
         // Retrieving project user is working in
         const project = currentUser.getProject(currentProject);
@@ -143,7 +157,8 @@ export let controller = (function() {
         getProjectInfo,
         getTodosForThisProject,
         updateTodoState,
-        deleteTodoFromCurrentUser
+        deleteTodoFromCurrentUser,
+        completeAllTodos
     }
 })();
 

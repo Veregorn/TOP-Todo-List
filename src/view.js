@@ -134,6 +134,9 @@ export let view = (function() {
         newTodo.addEventListener('click', function(){showTodosPopup()});
         const completeAll = createElementWithClass('button');
         completeAll.textContent = 'Complete ALL';
+        completeAll.addEventListener('click',function() {
+            controller.completeAllTodos();
+        });
         const deleteAll = createElementWithClass('button');
         deleteAll.textContent = 'Delete All';
 
@@ -480,21 +483,20 @@ export let view = (function() {
         date.setAttribute('type','date');
         date.setAttribute('name','projectDueDate');
         date.setAttribute('id','projectDueDate');
-        date.setAttribute('value',format(endOfToday(),'yyyy-mm-dd'));
-        date.setAttribute('min',format(endOfToday(),'yyyy-mm-dd'));
+        date.valueAsDate = new Date();
+        date.setAttribute('min',date.valueAsDate);
 
         const button = createElementWithClass('button','formButton');
         button.setAttribute('id','saveProject');
         button.setAttribute('type','button');
         button.textContent = 'Save Project';
         button.addEventListener('click', function(){
-            const dateObj = new Date(date.value);
             if (title.value.length === 0) {
                 alert("Title can't be empty!");
-            } else if (compareAsc(dateObj,startOfToday()) === -1) {
+            } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
-                controller.createProjectForCurrentUser(title.value,desc.value,dateObj);
+                controller.createProjectForCurrentUser(title.value,desc.value,date.valueAsDate);
                 unshowProjectsPopup();
             }
         });
@@ -514,6 +516,10 @@ export let view = (function() {
     function showProjectsPopup() {
         const popup = document.querySelector('#projectPopup');
         popup.style.display = "flex";
+        // Reasign default value to Due Date after the reset applied 
+        // in the unshow function
+        const date = getElement('projectDueDate');
+        date.valueAsDate = new Date();
     }
 
     // Called by HTML document element listener
