@@ -307,12 +307,13 @@ export let view = (function() {
         });
         li.appendChild(checkbox);
         
-        const titleP = createElementWithClass('p','todo');
-        titleP.textContent = name;
+        const titleA = createElementWithClass('a','todo');
+        titleA.textContent = name;
+        titleA.setAttribute('href','#');
         if (completed) {
-            titleP.classList.add('completed');
+            titleA.classList.add('completed');
         }
-        li.appendChild(titleP);
+        li.appendChild(titleA);
 
         const dateP = createElementWithClass('p','todo');
         dateP.textContent = format(date, 'dd/MM/yyyy');
