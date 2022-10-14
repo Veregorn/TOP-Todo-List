@@ -1,6 +1,6 @@
 import Logo from './assets/icons/logo-icon.png';
 import Magnify from './assets/icons/magnify.png';
-import {format, startOfToday, endOfToday, compareAsc} from 'date-fns';
+import {format, startOfToday, endOfToday, compareAsc, add} from 'date-fns';
 import {controller} from './index.js';
 
 // A module (only one instance) for a View that control DOM manipulation
@@ -84,7 +84,7 @@ export let view = (function() {
 
         const button = createElementWithClass('button');
         button.textContent = "New Project";
-        button.addEventListener('click', function(){showProjectsPopup()});
+        button.addEventListener('click', function(){showNewProjectPopup()});
         newProjDiv.appendChild(button);
 
         // HEADER
@@ -131,7 +131,7 @@ export let view = (function() {
 
         const newTodo = createElementWithClass('button');
         newTodo.textContent = 'New TODO';
-        newTodo.addEventListener('click', function(){showTodosPopup()});
+        newTodo.addEventListener('click', function(){showNewTodoPopup()});
         const completeAll = createElementWithClass('button');
         completeAll.textContent = 'Complete ALL';
         completeAll.addEventListener('click',function() {
@@ -179,15 +179,16 @@ export let view = (function() {
             const isInForm = element.target.closest('.popup-content');
             // Check if the zone clicked is the 'New Book' button
             const isButton = element.target.closest('button');
-            const todoPopup = document.querySelector('#todoPopup');
+
+            const newTodoPopup = document.querySelector('#newTodoPopup');
             const projectPopup = document.querySelector('#projectPopup');
             // If the users clicks out the form and the zone isn't a button and
             // the form is visible...
-            if (!isInForm && !isButton && todoPopup.style.display == 'flex') {
-                unshowTodosPopup();
+            if (!isInForm && !isButton && newTodoPopup.style.display == 'flex') {
+                unshowNewTodoPopup();
             }
             if (!isInForm && !isButton && projectPopup.style.display == 'flex') {
-                unshowProjectsPopup();
+                unshowNewProjectPopup();
             }
         });
 
@@ -313,6 +314,9 @@ export let view = (function() {
         if (completed) {
             titleA.classList.add('completed');
         }
+        titleA.addEventListener('click',function () {
+            controller.getTodoInfo(id);
+        });
         li.appendChild(titleA);
 
         const dateP = createElementWithClass('p','todo');
@@ -346,14 +350,14 @@ export let view = (function() {
     }
 
     // Function that renders the popup to add new TODOs (not displayed yet, view
-    // showTodosPopup())
-    function displayTodosPopup() {
+    // showNewTodoPopup())
+    function displayNewTodoPopup() {
         const main = getElement('main');
 
         const popup = createElementWithClass('div','popup');
-        popup.setAttribute('id','todoPopup');
+        popup.setAttribute('id','newTodoPopup');
         const popupContent = createElementWithClass('div','popup-content');
-        popupContent.setAttribute('id','todoPopupContent');
+        popupContent.setAttribute('id','newTodoPopupContent');
         const form = createElementWithId('form','newTodoForm');
 
         // FORM CONTENT
@@ -363,34 +367,34 @@ export let view = (function() {
         
         const title = createElementWithClass('input','formInput');
         title.setAttribute('type','text');
-        title.setAttribute('name','todoTitle');
-        title.setAttribute('id','todoTitle');
+        title.setAttribute('name','newTodoTitle');
+        title.setAttribute('id','newTodoTitle');
         title.setAttribute('placeholder','Title (required)');
 
         const desc = createElementWithClass('textarea','formArea');
-        desc.setAttribute('name','todoDesc');
-        desc.setAttribute('id','todoDesc');
+        desc.setAttribute('name','newTodoDesc');
+        desc.setAttribute('id','newTodoDesc');
         desc.setAttribute('placeholder','Description (optional)');
         desc.setAttribute('cols','31');
         desc.setAttribute('rows','4');
 
         const dateLabel = createElementWithClass('label','formLabel');
-        dateLabel.setAttribute('for','todoDueDate');
+        dateLabel.setAttribute('for','newTodoDueDate');
         dateLabel.textContent = 'Due Date';
 
         const date = createElementWithClass('input','formInput');
         date.setAttribute('type','date');
-        date.setAttribute('name','todoDueDate');
-        date.setAttribute('id','todoDueDate');
+        date.setAttribute('name','newTodoDueDate');
+        date.setAttribute('id','newTodoDueDate');
         date.valueAsDate = new Date();
         date.setAttribute('min',date.valueAsDate);
 
         const priorityLabel = createElementWithClass('label','formLabel');
-        priorityLabel.setAttribute('for','priority');
+        priorityLabel.setAttribute('for','newTodoPriority');
         priorityLabel.textContent = 'Priority';
 
         const prioritySelect = createElementWithClass('select','formInput');
-        prioritySelect.setAttribute('id','priority');
+        prioritySelect.setAttribute('id','newTodoPriority');
 
         const low = createElementWithClass('option');
         low.setAttribute('value','low');
@@ -402,7 +406,7 @@ export let view = (function() {
         high.textContent = 'high';
 
         const button = createElementWithClass('button','formButton');
-        button.setAttribute('id','saveTodo');
+        button.setAttribute('id','saveNewTodo');
         button.setAttribute('type','button');
         button.textContent = 'Save TODO';
         button.addEventListener('click', function(){
@@ -412,7 +416,93 @@ export let view = (function() {
                 alert("Don't create TODOs in the past. Please, look at your future!");
             } else {
                 controller.createTodoInCurrentProject(title.value,desc.value,date.valueAsDate,prioritySelect.value);
-                unshowTodosPopup();
+                unshowNewTodoPopup();
+            }
+        });
+
+        prioritySelect.appendChild(low);
+        prioritySelect.appendChild(high);
+        form.appendChild(header);
+        form.appendChild(title);
+        form.appendChild(desc);
+        form.appendChild(dateLabel);
+        form.appendChild(date);
+        form.appendChild(priorityLabel);
+        form.appendChild(prioritySelect);
+        form.appendChild(button);
+        popupContent.appendChild(form);
+        popup.appendChild(popupContent);
+        main.appendChild(popup);
+    }
+
+    // Function that renders the popup to edit TODOs (not displayed yet, view
+    // showEditTodoPopup())
+    function displayEditTodoPopup() {
+        const main = getElement('main');
+
+        const popup = createElementWithClass('div','popup');
+        popup.setAttribute('id','editTodoPopup');
+        const popupContent = createElementWithClass('div','popup-content');
+        popupContent.setAttribute('id','editTodoPopupContent');
+        const form = createElementWithId('form','editTodoForm');
+
+        // FORM CONTENT
+
+        const header = createElementWithClass('h2','popup-header');
+        header.textContent = 'Edit TODO';
+        
+        const title = createElementWithClass('input','formInput');
+        title.setAttribute('type','text');
+        title.setAttribute('name','editTodoTitle');
+        title.setAttribute('id','editTodoTitle');
+        title.setAttribute('placeholder','Title (required)');
+
+        const desc = createElementWithClass('textarea','formArea');
+        desc.setAttribute('name','editTodoDesc');
+        desc.setAttribute('id','editTodoDesc');
+        desc.setAttribute('placeholder','Description (optional)');
+        desc.setAttribute('cols','31');
+        desc.setAttribute('rows','4');
+
+        const dateLabel = createElementWithClass('label','formLabel');
+        dateLabel.setAttribute('for','editTodoDueDate');
+        dateLabel.textContent = 'Due Date';
+
+        const date = createElementWithClass('input','formInput');
+        date.setAttribute('type','date');
+        date.setAttribute('name','editTodoDueDate');
+        date.setAttribute('id','editTodoDueDate');
+        date.valueAsDate = new Date();
+        date.setAttribute('min',date.valueAsDate);
+
+        const priorityLabel = createElementWithClass('label','formLabel');
+        priorityLabel.setAttribute('for','editTodoPriority');
+        priorityLabel.textContent = 'Priority';
+
+        const prioritySelect = createElementWithClass('select','formInput');
+        prioritySelect.setAttribute('id','editTodoPriority');
+
+        const low = createElementWithClass('option');
+        low.setAttribute('value','low');
+        low.setAttribute('selected','true');
+        low.textContent = 'low';
+
+        const high = createElementWithClass('option');
+        high.setAttribute('value','high');
+        high.textContent = 'high';
+
+        const button = createElementWithClass('button','formButton');
+        button.setAttribute('id','saveEditedTodo');
+        button.setAttribute('type','button');
+        button.textContent = 'Edit TODO';
+        button.addEventListener('click', function(){
+            if (title.value.length === 0) {
+                alert("Title can't be empty!");
+            } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
+                alert("Don't create TODOs in the past. Please, look at your future!");
+            } else {
+                controller.editTodo(title.value,desc.value,date.valueAsDate,prioritySelect.value);
+                unshowEditTodoPopup();
             }
         });
 
@@ -432,27 +522,56 @@ export let view = (function() {
     }
 
     // Called by event listener associated to the 'New TODO' button
-    function showTodosPopup() {
-        const popup = document.querySelector('#todoPopup');
-        popup.style.display = "flex";
+    function showNewTodoPopup() {
         // Reasign default value to Due Date after the reset applied 
         // in the unshow function
-        const date = getElement('todoDueDate');
+        const date = getElement('newTodoDueDate');
         date.valueAsDate = new Date();
+        
+        const popup = document.querySelector('#newTodoPopup');
+        popup.style.display = "flex";
     }
 
     // Called by HTML document element listener
-    function unshowTodosPopup() {
-        const popup = document.querySelector('#todoPopup');
+    function unshowNewTodoPopup() {
+        const popup = document.querySelector('#newTodoPopup');
         popup.style.display = "none";
+        
         // Form needs to be cleaned
         const form = getElement('newTodoForm');
         form.reset();
     }
 
+    // Shows the popup to edit TODO data
+    function showEditTodoPopup(title,desc,date,priority) {
+        const titleInput = getElement('editTodoTitle');
+        const descInput = getElement('editTodoDesc');
+        const dateInput = getElement('editTodoDueDate');
+        const priorityInput = getElement('editTodoPriority');
+
+        titleInput.value = title;
+        descInput.value = desc;
+        dateInput.valueAsDate = add(date, {
+            days: 1,
+        });
+        priorityInput.value = priority;
+
+        const popup = document.querySelector('#editTodoPopup');
+        popup.style.display = "flex";
+    }
+
+    function unshowEditTodoPopup() {
+        const popup = document.querySelector('#editTodoPopup');
+        popup.style.display = "none";
+
+        // Form needs to be cleaned
+        const form = getElement('editTodoForm');
+        form.reset();
+    }
+
     // Function that renders the popup to add new Projects (not displayed yet, view
-    // showProjectsPopup())
-    function displayProjectsPopup() {
+    // showNewProjectPopup())
+    function displayNewProjectPopup() {
         const main = getElement('main');
 
         const popup = createElementWithClass('div','popup');
@@ -501,7 +620,7 @@ export let view = (function() {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
                 controller.createProjectForCurrentUser(title.value,desc.value,date.valueAsDate);
-                unshowProjectsPopup();
+                unshowNewProjectPopup();
             }
         });
 
@@ -517,7 +636,7 @@ export let view = (function() {
     }
 
     // Called by event listener associated to the 'New Project' button
-    function showProjectsPopup() {
+    function showNewProjectPopup() {
         const popup = document.querySelector('#projectPopup');
         popup.style.display = "flex";
         // Reasign default value to Due Date after the reset applied 
@@ -527,7 +646,7 @@ export let view = (function() {
     }
 
     // Called by HTML document element listener
-    function unshowProjectsPopup() {
+    function unshowNewProjectPopup() {
         const popup = document.querySelector('#projectPopup');
         popup.style.display = "none";
         // Form needs to be cleaned
@@ -571,8 +690,10 @@ export let view = (function() {
         displayUserInfo,
         displayProjectInfo,
         displayTodoInList,
-        displayTodosPopup,
-        displayProjectsPopup,
-        removeTodosFromDom
+        displayNewTodoPopup,
+        displayNewProjectPopup,
+        removeTodosFromDom,
+        displayEditTodoPopup,
+        showEditTodoPopup
     }
 })();

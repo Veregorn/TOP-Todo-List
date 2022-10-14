@@ -16,6 +16,9 @@ let currentUser = User();
 // By default is number 1 (the ID of the default project)
 let currentProject = 1;
 
+// One global variable to control what TODO user is editing
+let currentTodo = 1;
+
 // A module for the controller (App logic)
 export let controller = (function() {
     'use strict';
@@ -162,6 +165,34 @@ export let controller = (function() {
         getTodosForThisProject(currentProject);
     }
 
+    // Function called by event listener associated to the names of TODOs
+    // Retrieve the TODO from the model and pass required fields to the view
+    function getTodoInfo(id) {
+        const project = currentUser.getProject(currentProject);
+        const todo = project.getTodoById(id);
+
+        // Global variable needs to be updated
+        currentTodo = id;
+
+        view.showEditTodoPopup(todo.getTitle(),todo.getDescription(),todo.getDueDate(),todo.getPriority());
+    }
+
+    // Function that updates TODO info in the model with the updates 
+    // from the Edit TODO popup
+    function editTodo(title,desc,date,priority) {
+        const project = currentUser.getProject(currentProject);
+        const todo = project.getTodoById(currentTodo);
+
+        // Now let's edit todo fields
+        todo.setTitle(title);
+        todo.setDescription(desc);
+        todo.setDueDate(date);
+        todo.setPriority(priority);
+
+        // Last we need to refresh TODOs in view
+        refreshTodos(project);
+    }
+
     return {
         createProjectForCurrentUser,
         createTodoInCurrentProject,
@@ -173,7 +204,9 @@ export let controller = (function() {
         updateTodoState,
         deleteTodoFromCurrentUser,
         completeAllTodos,
-        deleteAllTodos
+        deleteAllTodos,
+        getTodoInfo,
+        editTodo
     }
 })();
 
@@ -205,5 +238,6 @@ const project4 = controller.createProjectForCurrentUser("Learn how to cook a Spa
 view.displayUserInfo(currentUser.getAvatar(),currentUser.getName());
 view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
 
-view.displayTodosPopup();
-view.displayProjectsPopup();
+view.displayNewTodoPopup();
+view.displayNewProjectPopup();
+view.displayEditTodoPopup();
