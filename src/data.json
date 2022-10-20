@@ -1,0 +1,66 @@
+{
+    "user": {
+        "id": 1,
+        "name": "Veregorn",
+        "path": "./assets/icons/monkey.svg",
+        "projects": {
+            "project-1": {
+                "id": 1,
+                "title": "Default Project",
+                "desc": "This is the project by default. New TODOs go inside this project if no other is specified.",
+                "date": "31/11/2022",
+                "todos": {
+                    "todo-1": {
+                        "id": 1,
+                        "title": "Do the housework",
+                        "desc": "I'm todo number 1",
+                        "date": "22/11/2022",
+                        "priority": "high"
+                    },
+                    "todo-2": {
+                        "id": 2,
+                        "title": "Buy potatoes at the supermarket",
+                        "desc": "I'm todo number 2",
+                        "date": "05/11/2022",
+                        "priority": "low"
+                    },
+                    "todo-3": {
+                        "id": 3,
+                        "title": "todo3",
+                        "desc": "I'm todo number 3",
+                        "date": "11/11/2022",
+                        "priority": "high"
+                    },
+                    "todo-4": {
+                        "id": 4,
+                        "title": "Go to The Box and take my CrossFit class, paying current month and buying the new team shorts",
+                        "desc": "I'm todo number 4",
+                        "date": "18/11/2022",
+                        "priority": "low"
+                    }
+                }
+            },
+            "project-2": {
+                "id": 2,
+                "title": "Another Project",
+                "desc": "This is project number 2",
+                "date": "01/12/2022",
+                "todos": {}
+            },
+            "project-3": {
+                "id": 3,
+                "title": "Develop a web3 App",
+                "desc": "This is project number 3",
+                "date": "15/12/2022",
+                "todos": {}
+            },
+            "project-4": {
+                "id": 4,
+                "title": "Learn how to cook a Spanish Omelette",
+                "desc": "This is project number 4",
+                "date": "30/12/2022",
+                "todos": {}
+            }
+        }
+    }
+}

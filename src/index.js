@@ -23,17 +23,14 @@ let currentTodo = 1;
 export let controller = (function() {
     'use strict';
 
-    function createProjectForCurrentUser(title,desc,date) {
-        const project = Project(projectsIdCounter,title,desc,date);
-        projectsIdCounter++;
+    function createProjectForCurrentUser(id,title,desc,date) {
+        const project = Project(id,title,desc,date);
         currentUser.addProject(project);
         refreshProjects(currentUser);
-        return project;
     }
 
-    function createTodoInCurrentProject(title,desc,date,priority) {
-        const todo = Todo(todosIdCounter,title,desc,date,priority);
-        todosIdCounter++;
+    function createTodoInCurrentProject(id,title,desc,date,priority) {
+        const todo = Todo(id,title,desc,date,priority);
         const project = currentUser.getProject(currentProject);
         project.addTodo(todo);
         refreshTodos(project);
@@ -213,31 +210,76 @@ export let controller = (function() {
 // Displaying main interface
 view.loadMainUI();
 
-// Let's create a new user and assign it to current User using the App
-currentUser = controller.createUser("Veregorn",Avatar);
+//localStorage.clear();
 
-// Let's create some dates to use for projects and todos
-const date1 = new Date(2022, 8, 22);
-const date2 = new Date(2022, 8, 5);
-const date3 = new Date(2022, 11, 31);
-const date4 = new Date(2023, 0, 1);
+// Let's check if there is data in localStorage
+let stringifiedCurrentUser = localStorage.getItem("Default User");
+//console.log("Stringified Current User retrieved from localStorage at start App: " + stringifiedCurrentUser);
 
-// Now let's create some projects
-const defProject = controller.createProjectForCurrentUser("Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
+if (stringifiedCurrentUser != null) {
+    const deserializedCurrentUser = JSON.parse(stringifiedCurrentUser, function (key,value) {
+        if (key == "dueDate") {
+            return new Date(value);
+        } else {
+            return value;
+        }        
+    });
+    //console.log("Current User Object after first start: " + deserializedCurrentUser);
+    currentUser = User(deserializedCurrentUser.id,deserializedCurrentUser.name,deserializedCurrentUser.avatar);
+    for (let i = 0; i < deserializedCurrentUser.projects.length; i++) {
+        const deserializedProject = deserializedCurrentUser.projects[i];
+        controller.createProjectForCurrentUser(deserializedProject.id,deserializedProject.title,deserializedProject.description,deserializedProject.dueDate);
+        for (let j = 0; j < deserializedProject.todos.length; j++) {
+            const deserializedTodo = deserializedProject.todos[j];
+            controller.createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
+        }
+    }
+} else {
+    // Let's create a new user and assign it to current User using the App
+    currentUser = controller.createUser("Veregorn",Avatar);
 
-// I need some todos (these are added to current project, 'defProject' by default)
-controller.createTodoInCurrentProject("Do the housework","I'm todo number 1",date1,"high");
-controller.createTodoInCurrentProject("Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
-controller.createTodoInCurrentProject("todo3","I'm todo number 3",date1,"high");
-controller.createTodoInCurrentProject("Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
+    // Let's create some dates to use for projects and todos
+    const date1 = new Date(2022, 8, 22);
+    const date2 = new Date(2022, 8, 5);
+    const date3 = new Date(2022, 11, 31);
+    const date4 = new Date(2023, 0, 1);
 
-const anotherProject = controller.createProjectForCurrentUser("Another Project","This is the project number 2",date4);
-const project3 = controller.createProjectForCurrentUser("Develop a web3 App","This is the project number 3",date4);
-const project4 = controller.createProjectForCurrentUser("Learn how to cook a Spanish Omelette","This is the project number 4",date4);
+    // Now let's create some projects
+    controller.createProjectForCurrentUser(projectsIdCounter,"Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
+    projectsIdCounter++;
 
+    // I need some todos (these are added to current project, 'defProject' by default)
+    controller.createTodoInCurrentProject(todosIdCounter,"Do the housework","I'm todo number 1",date1,"high");
+    todosIdCounter++;
+    controller.createTodoInCurrentProject(todosIdCounter,"Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
+    todosIdCounter++;
+    controller.createTodoInCurrentProject(todosIdCounter,"todo3","I'm todo number 3",date1,"high");
+    todosIdCounter++;
+    controller.createTodoInCurrentProject(todosIdCounter,"Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
+    todosIdCounter++;
+
+    controller.createProjectForCurrentUser(projectsIdCounter,"Another Project","This is project number 2",date4);
+    projectsIdCounter++;
+    controller.createProjectForCurrentUser(projectsIdCounter,"Develop a web3 App","This is project number 3",date4);
+    projectsIdCounter++;
+    controller.createProjectForCurrentUser(projectsIdCounter,"Learn how to cook a Spanish Omelette","This is the project number 4",date4);
+    projectsIdCounter++;
+
+    // Let's save the initial data in JSON Web Storage API (localStorage)
+    stringifiedCurrentUser = JSON.stringify(currentUser);
+    //console.log("Stringified Current User retrieved from toJSON method inside User factory: " + stringifiedCurrentUser);
+    localStorage.setItem("Default User",stringifiedCurrentUser);
+
+    //const stringifiedTodo = JSON.stringify(defProject.getTodoById(1));
+    //console.log("Default Project's first TODO stringified is: " + stringifiedTodo);
+
+    //const stringifiedProject = JSON.stringify(defProject);
+    //console.log("Default Project stringified is: " + stringifiedProject);
+}
+
+// Displaying another required elements
 view.displayUserInfo(currentUser.getAvatar(),currentUser.getName());
-view.displayProjectInfo(defProject.getTitle(),defProject.getDescription(),defProject.getDueDate());
-
+view.displayProjectInfo(currentUser.getProject(1).getTitle(),currentUser.getProject(1).getDescription(),currentUser.getProject(1).getDueDate());
 view.displayNewTodoPopup();
 view.displayNewProjectPopup();
 view.displayEditTodoPopup();
