@@ -4,9 +4,22 @@ import {view} from './view.js';
 import Avatar from './assets/icons/monkey.svg';
 
 // Three global variables needed to control ids for todos, projects and users
+// In first start their value is 1. In other cases we need to retrieve it from localStorage
 let todosIdCounter = 1;
 let projectsIdCounter = 1;
 let usersIdCounter = 1;
+
+if (localStorage.getItem("todosIdCounter") != null) {
+    todosIdCounter = localStorage.getItem("todosIdCounter");
+}
+
+if (localStorage.getItem("projectsIdCounter") != null) {
+    projectsIdCounter = localStorage.getItem("projectsIdCounter");
+}
+
+if (localStorage.getItem("usersIdCounter") != null) {
+    usersIdCounter = localStorage.getItem("usersIdCounter");
+}
 
 // One global variable to control who is the user that control the IA
 // at the moment
@@ -19,26 +32,48 @@ let currentProject = 1;
 // One global variable to control what TODO user is editing
 let currentTodo = 1;
 
+// One global variable to check if there is data in localStorage
+let stringifiedCurrentUser = localStorage.getItem("Default User");
+
 // A module for the controller (App logic)
 export let controller = (function() {
     'use strict';
 
     function createProjectForCurrentUser(id,title,desc,date) {
-        const project = Project(id,title,desc,date);
-        currentUser.addProject(project);
+        // If 'id' == null then is a new project, else is a project retrieved
+        // from localStorage
+        if (id === null) {
+            const newID = projectsIdCounter;
+            projectsIdCounter++;
+            currentUser.addProject(Project(newID,title,desc,date));
+        } else {
+            currentUser.addProject(Project(id,title,desc,date));
+        }
+
         refreshProjects(currentUser);
+        SaveInLocalStorage();
     }
 
     function createTodoInCurrentProject(id,title,desc,date,priority) {
-        const todo = Todo(id,title,desc,date,priority);
         const project = currentUser.getProject(currentProject);
-        project.addTodo(todo);
+        // If 'id' == null then is a new todo, else is a todo retrieved
+        // from localStorage
+        if (id === null) {
+            const newID = todosIdCounter;
+            todosIdCounter++;
+            project.addTodo(Todo(newID,title,desc,date,priority));
+        } else {
+            project.addTodo(Todo(id,title,desc,date,priority));
+        }
+
         refreshTodos(project);
+        SaveInLocalStorage();
     }
 
     function createUser(name,path) {
         const user = User(usersIdCounter,name,path);
         usersIdCounter++;
+        SaveInLocalStorage();
         return user;
     }
 
@@ -75,6 +110,7 @@ export let controller = (function() {
         if (currentProject === id) {
             getProjectInfo(1);
         }
+        SaveInLocalStorage();
     }
 
     // When project title is clicked in left menu, controller retrieves info
@@ -121,6 +157,8 @@ export let controller = (function() {
 
         // Last, we need to update changes in user's screen
         refreshTodos(project);
+
+        SaveInLocalStorage();
     }
 
     function deleteAllTodos() {
@@ -135,6 +173,8 @@ export let controller = (function() {
 
         // Last, we need to update changes in user's screen
         refreshTodos(project);
+
+        SaveInLocalStorage();
     }
 
     function updateTodoState(id,checked) {
@@ -149,6 +189,8 @@ export let controller = (function() {
         } else {
             todo.unComplete();
         }
+
+        SaveInLocalStorage();
     }
 
     function deleteTodoFromCurrentUser(id) {
@@ -160,6 +202,8 @@ export let controller = (function() {
         // Now I need to refresh todos in DOM
         view.removeTodosFromDom();
         getTodosForThisProject(currentProject);
+
+        SaveInLocalStorage();
     }
 
     // Function called by event listener associated to the names of TODOs
@@ -188,6 +232,18 @@ export let controller = (function() {
 
         // Last we need to refresh TODOs in view
         refreshTodos(project);
+
+        SaveInLocalStorage();
+    }
+
+    // Function that saves model status in localStorage
+    function SaveInLocalStorage() {
+        // Let's save the initial data in JSON Web Storage API (localStorage)
+        stringifiedCurrentUser = JSON.stringify(currentUser);
+        localStorage.setItem("Default User",stringifiedCurrentUser);
+        localStorage.setItem("todosIdCounter",todosIdCounter);
+        localStorage.setItem("projectsIdCounter",projectsIdCounter);
+        localStorage.setItem("usersIdCounter",usersIdCounter);
     }
 
     return {
@@ -203,18 +259,14 @@ export let controller = (function() {
         completeAllTodos,
         deleteAllTodos,
         getTodoInfo,
-        editTodo
+        editTodo,
+        SaveInLocalStorage,
+        refreshTodos
     }
 })();
 
 // Displaying main interface
 view.loadMainUI();
-
-//localStorage.clear();
-
-// Let's check if there is data in localStorage
-let stringifiedCurrentUser = localStorage.getItem("Default User");
-//console.log("Stringified Current User retrieved from localStorage at start App: " + stringifiedCurrentUser);
 
 if (stringifiedCurrentUser != null) {
     const deserializedCurrentUser = JSON.parse(stringifiedCurrentUser, function (key,value) {
@@ -224,16 +276,22 @@ if (stringifiedCurrentUser != null) {
             return value;
         }        
     });
-    //console.log("Current User Object after first start: " + deserializedCurrentUser);
+
     currentUser = User(deserializedCurrentUser.id,deserializedCurrentUser.name,deserializedCurrentUser.avatar);
     for (let i = 0; i < deserializedCurrentUser.projects.length; i++) {
         const deserializedProject = deserializedCurrentUser.projects[i];
-        controller.createProjectForCurrentUser(deserializedProject.id,deserializedProject.title,deserializedProject.description,deserializedProject.dueDate);
+        controller.createProjectForCurrentUser(deserializedProject.id,deserializedProject.title,
+            deserializedProject.description,deserializedProject.dueDate);
+            currentProject = deserializedProject.id;
         for (let j = 0; j < deserializedProject.todos.length; j++) {
             const deserializedTodo = deserializedProject.todos[j];
-            controller.createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
+            controller.createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,
+                deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
         }
     }
+    // Let's reasign currentProject to Default Project value
+    currentProject = 1;
+    controller.refreshTodos(currentUser.getProject(currentProject));
 } else {
     // Let's create a new user and assign it to current User using the App
     currentUser = controller.createUser("Veregorn",Avatar);
@@ -265,16 +323,8 @@ if (stringifiedCurrentUser != null) {
     controller.createProjectForCurrentUser(projectsIdCounter,"Learn how to cook a Spanish Omelette","This is the project number 4",date4);
     projectsIdCounter++;
 
-    // Let's save the initial data in JSON Web Storage API (localStorage)
-    stringifiedCurrentUser = JSON.stringify(currentUser);
-    //console.log("Stringified Current User retrieved from toJSON method inside User factory: " + stringifiedCurrentUser);
-    localStorage.setItem("Default User",stringifiedCurrentUser);
-
-    //const stringifiedTodo = JSON.stringify(defProject.getTodoById(1));
-    //console.log("Default Project's first TODO stringified is: " + stringifiedTodo);
-
-    //const stringifiedProject = JSON.stringify(defProject);
-    //console.log("Default Project stringified is: " + stringifiedProject);
+    // We need to save initial App status in localStorage
+    controller.SaveInLocalStorage();
 }
 
 // Displaying another required elements

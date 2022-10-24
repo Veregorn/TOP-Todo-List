@@ -173,15 +173,18 @@ export let view = (function() {
 
         // USEFUL LISTENERS
         
-        // Listener that hide new TODO or new PROJECT popup if user clicks outside it
+        // Listener that hide new TODO or new PROJECT or edit TODO popup if user clicks outside it
         document.addEventListener('click', function(element) {
             // Check if the zone clicked is in the form div
             const isInForm = element.target.closest('.popup-content');
-            // Check if the zone clicked is the 'New Book' button
+            // Check if the zone clicked is a button
             const isButton = element.target.closest('button');
+            // Chack if the zone clicked is a TODO
+            const isTodo = element.target.closest('.todo');
 
             const newTodoPopup = document.querySelector('#newTodoPopup');
             const projectPopup = document.querySelector('#projectPopup');
+            const editTodoPopup = document.querySelector('#editTodoPopup');
             // If the users clicks out the form and the zone isn't a button and
             // the form is visible...
             if (!isInForm && !isButton && newTodoPopup.style.display == 'flex') {
@@ -190,6 +193,11 @@ export let view = (function() {
             if (!isInForm && !isButton && projectPopup.style.display == 'flex') {
                 unshowNewProjectPopup();
             }
+            
+            if (!isInForm && !isButton && !isTodo && editTodoPopup.style.display == 'flex') {
+                unshowEditTodoPopup();
+            }
+            
         });
 
 
@@ -415,7 +423,7 @@ export let view = (function() {
             } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
                 alert("Don't create TODOs in the past. Please, look at your future!");
             } else {
-                controller.createTodoInCurrentProject(title.value,desc.value,date.valueAsDate,prioritySelect.value);
+                controller.createTodoInCurrentProject(null,title.value,desc.value,date.valueAsDate,prioritySelect.value);
                 unshowNewTodoPopup();
             }
         });
@@ -551,9 +559,7 @@ export let view = (function() {
 
         titleInput.value = title;
         descInput.value = desc;
-        dateInput.valueAsDate = add(date, {
-            days: 1,
-        });
+        dateInput.valueAsDate = date;
         priorityInput.value = priority;
 
         const popup = document.querySelector('#editTodoPopup');
@@ -619,7 +625,7 @@ export let view = (function() {
             } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
                 alert("Don't create projects in the past. Please, look at your future!");
             } else {
-                controller.createProjectForCurrentUser(title.value,desc.value,date.valueAsDate);
+                controller.createProjectForCurrentUser(null,title.value,desc.value,date.valueAsDate);
                 unshowNewProjectPopup();
             }
         });
