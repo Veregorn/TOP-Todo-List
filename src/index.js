@@ -297,10 +297,10 @@ if (stringifiedCurrentUser != null) {
     currentUser = controller.createUser("Veregorn",Avatar);
 
     // Let's create some dates to use for projects and todos
-    const date1 = new Date(2022, 8, 22);
-    const date2 = new Date(2022, 8, 5);
-    const date3 = new Date(2022, 11, 31);
-    const date4 = new Date(2023, 0, 1);
+    const date1 = new Date(2022, 8, 22, 15);
+    const date2 = new Date(2022, 8, 5, 15);
+    const date3 = new Date(2022, 11, 31, 15);
+    const date4 = new Date(2023, 0, 1, 15);
 
     // Now let's create some projects
     controller.createProjectForCurrentUser(projectsIdCounter,"Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
