@@ -246,6 +246,58 @@ export let controller = (function() {
         localStorage.setItem("usersIdCounter",usersIdCounter);
     }
 
+    // Function that populates the model with info from localStorage in JSON format
+    function populateData() {
+        const deserializedCurrentUser = JSON.parse(stringifiedCurrentUser, function (key,value) {
+            if (key == "dueDate") {
+                return new Date(value);
+            } else {
+                return value;
+            }        
+        });
+    
+        currentUser = User(deserializedCurrentUser.id,deserializedCurrentUser.name,deserializedCurrentUser.avatar);
+        for (let i = 0; i < deserializedCurrentUser.projects.length; i++) {
+            const deserializedProject = deserializedCurrentUser.projects[i];
+            createProjectForCurrentUser(deserializedProject.id,deserializedProject.title,
+                deserializedProject.description,deserializedProject.dueDate);
+                currentProject = deserializedProject.id;
+            for (let j = 0; j < deserializedProject.todos.length; j++) {
+                const deserializedTodo = deserializedProject.todos[j];
+                createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,
+                    deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
+            }
+        }
+    }
+
+    // Function that generates data example to populate the App in a fresh start
+    function loadExampleData() {
+        // Let's create a new user and assign it to current User using the App
+        currentUser = createUser("Veregorn",Avatar);
+
+        // Let's create some dates to use for projects and todos
+        const date1 = new Date(2023, 8, 22, 15);
+        const date2 = new Date(2023, 8, 5, 15);
+        const date3 = new Date(2023, 11, 31, 15);
+        const date4 = new Date(2023, 11, 1, 15);
+
+        // Now let's create some projects
+        createProjectForCurrentUser(projectsIdCounter,"Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
+        projectsIdCounter++;
+        createProjectForCurrentUser(projectsIdCounter,"Develop a web3 App","A side personal project: Developing a Solidity App for the Ethereum Blockchain.",date4);
+        projectsIdCounter++;
+        createProjectForCurrentUser(projectsIdCounter,"Learn how to cook a Spanish Omelette","In this project I need to master my mother's great spanish omelette. It needs to be 80% the same.",date4);
+        projectsIdCounter++;
+
+        // I need some todos (these are added to current project, 'defProject' by default)
+        createTodoInCurrentProject(todosIdCounter,"Do the housework","I'm todo number 1",date1,"high");
+        todosIdCounter++;
+        createTodoInCurrentProject(todosIdCounter,"Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
+        todosIdCounter++;
+        createTodoInCurrentProject(todosIdCounter,"Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
+        todosIdCounter++;
+    }
+
     return {
         createProjectForCurrentUser,
         createTodoInCurrentProject,
@@ -261,67 +313,26 @@ export let controller = (function() {
         getTodoInfo,
         editTodo,
         SaveInLocalStorage,
-        refreshTodos
+        refreshTodos,
+        populateData,
+        loadExampleData
     }
 })();
 
 // Displaying main interface
 view.loadMainUI();
 
+// Let's test if we are in a clean start or there is info in localStorage
 if (stringifiedCurrentUser != null) {
-    const deserializedCurrentUser = JSON.parse(stringifiedCurrentUser, function (key,value) {
-        if (key == "dueDate") {
-            return new Date(value);
-        } else {
-            return value;
-        }        
-    });
-
-    currentUser = User(deserializedCurrentUser.id,deserializedCurrentUser.name,deserializedCurrentUser.avatar);
-    for (let i = 0; i < deserializedCurrentUser.projects.length; i++) {
-        const deserializedProject = deserializedCurrentUser.projects[i];
-        controller.createProjectForCurrentUser(deserializedProject.id,deserializedProject.title,
-            deserializedProject.description,deserializedProject.dueDate);
-            currentProject = deserializedProject.id;
-        for (let j = 0; j < deserializedProject.todos.length; j++) {
-            const deserializedTodo = deserializedProject.todos[j];
-            controller.createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,
-                deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
-        }
-    }
+    // If there's info in localStorage, let's extract that info
+    controller.populateData();
     // Let's reasign currentProject to Default Project value
     currentProject = 1;
+    // Last we need to refresh TODOs displayed
     controller.refreshTodos(currentUser.getProject(currentProject));
 } else {
-    // Let's create a new user and assign it to current User using the App
-    currentUser = controller.createUser("Veregorn",Avatar);
-
-    // Let's create some dates to use for projects and todos
-    const date1 = new Date(2022, 8, 22, 15);
-    const date2 = new Date(2022, 8, 5, 15);
-    const date3 = new Date(2022, 11, 31, 15);
-    const date4 = new Date(2023, 0, 1, 15);
-
-    // Now let's create some projects
-    controller.createProjectForCurrentUser(projectsIdCounter,"Default Project","This is the project by default. New TODOs go inside this project if no other is specified.",date3);
-    projectsIdCounter++;
-
-    // I need some todos (these are added to current project, 'defProject' by default)
-    controller.createTodoInCurrentProject(todosIdCounter,"Do the housework","I'm todo number 1",date1,"high");
-    todosIdCounter++;
-    controller.createTodoInCurrentProject(todosIdCounter,"Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
-    todosIdCounter++;
-    controller.createTodoInCurrentProject(todosIdCounter,"todo3","I'm todo number 3",date1,"high");
-    todosIdCounter++;
-    controller.createTodoInCurrentProject(todosIdCounter,"Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
-    todosIdCounter++;
-
-    controller.createProjectForCurrentUser(projectsIdCounter,"Another Project","This is project number 2",date4);
-    projectsIdCounter++;
-    controller.createProjectForCurrentUser(projectsIdCounter,"Develop a web3 App","This is project number 3",date4);
-    projectsIdCounter++;
-    controller.createProjectForCurrentUser(projectsIdCounter,"Learn how to cook a Spanish Omelette","This is the project number 4",date4);
-    projectsIdCounter++;
+    // Let's load some data as example for user
+    controller.loadExampleData();
 
     // We need to save initial App status in localStorage
     controller.SaveInLocalStorage();
