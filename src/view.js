@@ -104,7 +104,12 @@ export let view = (function() {
         const searchInput = createElementWithId('input','search-input');
         searchInput.setAttribute('type','text');
         searchInput.setAttribute('name','search-input');
-        searchInput.setAttribute('placeholder','Find TODOs in this project');
+        searchInput.setAttribute('placeholder','Find TODOs in this project (Empty for ALL TODOs)');
+        searchInput.addEventListener('keypress', function(e){
+            if (e.key === 'Enter') {
+                controller.displayFoundTodos(searchInput.value);
+            }
+        });
         search.appendChild(searchInput);
 
         const user = createElementWithId('div','user');

@@ -298,6 +298,35 @@ export let controller = (function() {
         todosIdCounter++;
     }
 
+    // Function that returns an array of TODOs that match IN match pattern
+    function findTodosInCurrentProject(pattern) {
+        const todosArray = [];
+        const project = currentUser.getProject(currentProject);
+
+        for (let i = 0; i < project.getNumberOfTodos(); i++) {
+            // To make the String.includes() method case insensitive, convert both of the strings in the comparison to lowercase
+            if (project.getTodoByOrder(i).getTitle().toLowerCase().includes(pattern.toLowerCase()) || project.getTodoByOrder(i).getDescription().toLowerCase().includes(pattern.toLowerCase())) {
+                todosArray.push(project.getTodoByOrder(i));
+            }
+        }
+
+        return todosArray;
+    }
+
+    // Function called by event listener associated to search bar that make an array with TODOs and display them
+    function displayFoundTodos(pattern) {
+        // First retrieve the array with TODOs that match IN pattern
+        const todosArray = findTodosInCurrentProject(pattern);
+
+        // Then, delete TODOs displayed
+        view.removeTodosFromDom();
+        
+        // Last iterate the array and display each TODO
+        for (let i = 0; i < todosArray.length; i++) {
+            view.displayTodoInList(todosArray[i].getId(),todosArray[i].getTitle(),todosArray[i].getDueDate(),todosArray[i].isCompleted(),todosArray[i].getPriority(),todosArray[i].isOverdued());
+        }
+    }
+
     return {
         createProjectForCurrentUser,
         createTodoInCurrentProject,
@@ -315,7 +344,8 @@ export let controller = (function() {
         SaveInLocalStorage,
         refreshTodos,
         populateData,
-        loadExampleData
+        loadExampleData,
+        displayFoundTodos
     }
 })();
 
