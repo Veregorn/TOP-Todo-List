@@ -428,7 +428,7 @@ export let view = (function() {
             } else if (compareAsc(date.valueAsDate,startOfToday()) === -1) {
                 alert("Don't create TODOs in the past. Please, look at your future!");
             } else {
-                controller.createTodoInCurrentProject(null,title.value,desc.value,date.valueAsDate,prioritySelect.value);
+                controller.createTodoInCurrentProject(null,title.value,desc.value,date.valueAsDate,prioritySelect.value,false);
                 unshowNewTodoPopup();
             }
         });

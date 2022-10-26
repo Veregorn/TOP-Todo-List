@@ -1,7 +1,7 @@
 import { compareAsc, endOfToday } from "date-fns";
 
 // Factory (multiple instances) for todos
-export const Todo = (id,title,description,dueDate,priority) => {
+export const Todo = (id,title,description,dueDate,priority,completed) => {
     
     // PROPERTIES
     // For convention, I add a '_' before the name of every private property
@@ -11,7 +11,7 @@ export const Todo = (id,title,description,dueDate,priority) => {
     let _dueDate = new Date();
     _dueDate = dueDate;
     let _priority = priority; // 'low' or 'high'
-    let _completed = false;
+    let _completed = completed;
 
     // METHODS
     const getId = () => _id;

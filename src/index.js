@@ -54,16 +54,16 @@ export let controller = (function() {
         SaveInLocalStorage();
     }
 
-    function createTodoInCurrentProject(id,title,desc,date,priority) {
+    function createTodoInCurrentProject(id,title,desc,date,priority,completed) {
         const project = currentUser.getProject(currentProject);
         // If 'id' == null then is a new todo, else is a todo retrieved
         // from localStorage
         if (id === null) {
             const newID = todosIdCounter;
             todosIdCounter++;
-            project.addTodo(Todo(newID,title,desc,date,priority));
+            project.addTodo(Todo(newID,title,desc,date,priority,completed));
         } else {
-            project.addTodo(Todo(id,title,desc,date,priority));
+            project.addTodo(Todo(id,title,desc,date,priority,completed));
         }
 
         refreshTodos(project);
@@ -265,7 +265,7 @@ export let controller = (function() {
             for (let j = 0; j < deserializedProject.todos.length; j++) {
                 const deserializedTodo = deserializedProject.todos[j];
                 createTodoInCurrentProject(deserializedTodo.id,deserializedTodo.title,
-                    deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority);
+                    deserializedTodo.description,deserializedTodo.dueDate,deserializedTodo.priority,deserializedTodo.completed);
             }
         }
     }
@@ -290,11 +290,11 @@ export let controller = (function() {
         projectsIdCounter++;
 
         // I need some todos (these are added to current project, 'defProject' by default)
-        createTodoInCurrentProject(todosIdCounter,"Do the housework","I'm todo number 1",date1,"high");
+        createTodoInCurrentProject(todosIdCounter,"Do the housework","I'm todo number 1",date1,"high",false);
         todosIdCounter++;
-        createTodoInCurrentProject(todosIdCounter,"Buy potatoes at the supermarket","I'm todo number 2",date2,"low");
+        createTodoInCurrentProject(todosIdCounter,"Buy potatoes at the supermarket","I'm todo number 2",date2,"low",false);
         todosIdCounter++;
-        createTodoInCurrentProject(todosIdCounter,"Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low");
+        createTodoInCurrentProject(todosIdCounter,"Go to The Box and take my CrossFit class, paying current month and buying the new team shorts","I'm todo number 4",date2,"low",false);
         todosIdCounter++;
     }
 
